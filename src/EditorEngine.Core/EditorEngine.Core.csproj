@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4A461BE-F533-4720-A5FC-443B4D3471E4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>EditorEngine.Core</RootNamespace>
+    <AssemblyName>EditorEngine.Core</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Core" />
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle.Windsor\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle.Windsor\Castle.Windsor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Endpoints\ICommandEndpoint.cs" />
+    <Compile Include="Endpoints\CommandEndpoint.cs" />
+    <Compile Include="Messaging\IMessageDispatcher.cs" />
+    <Compile Include="Messaging\Message.cs" />
+    <Compile Include="Messaging\IConsumerOf.cs" />
+    <Compile Include="Messaging\MessageDispatcher.cs" />
+    <Compile Include="Endpoints\Tcp\TcpServer.cs" />
+    <Compile Include="Endpoints\Tcp\ITcpServer.cs" />
+    <Compile Include="Messaging\Messages\CommandMessage.cs" />
+    <Compile Include="Endpoints\IService.cs" />
+    <Compile Include="Commands\CommandDispatcher.cs" />
+    <Compile Include="Commands\Handlers\GoToHandler.cs" />
+    <Compile Include="Messaging\Messages\UsageErrorMessage.cs" />
+    <Compile Include="Messaging\Messages\EditorGoToMessage.cs" />
+    <Compile Include="Commands\ICommandHandler.cs" />
+    <Compile Include="Bootstrapping\Bootstrapper.cs" />
+    <Compile Include="Bootstrapping\DIContainer.cs" />
+    <Compile Include="Messaging\Messages\ShutdownMessage.cs" />
+    <Compile Include="Editors\EditorDispatcher.cs" />
+    <Compile Include="Editors\IEditor.cs" />
+    <Compile Include="Messaging\Messages\EditorLoadMessage.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Endpoints\" />
+    <Folder Include="Messaging\" />
+    <Folder Include="Endpoints\Tcp\" />
+    <Folder Include="Messaging\Messages\" />
+    <Folder Include="Commands\" />
+    <Folder Include="Commands\Handlers\" />
+    <Folder Include="Bootstrapping\" />
+    <Folder Include="Editors\" />
+  </ItemGroup>
+</Project>
