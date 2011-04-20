@@ -10,6 +10,7 @@ using Castle.Windsor;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using EditorEngine.Core.Editors;
+using EditorEngine.Core.FileSystem;
 
 namespace EditorEngine.Core.Bootstrapping
 {
@@ -23,6 +24,8 @@ namespace EditorEngine.Core.Bootstrapping
             _container.Kernel.Resolver.AddSubResolver(new ArrayResolver(_container.Kernel));
             _container
 				.Register(Component.For<IMessageDispatcher>().ImplementedBy<MessageDispatcher>().LifeStyle.Singleton)
+				.Register(Component.For<IFS>().ImplementedBy<FS>())
+				.Register(Component.For<IPluginLoader>().ImplementedBy<PluginLoader>())
 				// Services
 				.Register(Component.For<ICommandEndpoint>().Forward<IService>().ImplementedBy<CommandEndpoint>().LifeStyle.Singleton)
 				// Message consumers
@@ -31,7 +34,8 @@ namespace EditorEngine.Core.Bootstrapping
 							  .Forward<IConsumerOf<EditorGoToMessage>>()
 					          .ImplementedBy<EditorDispatcher>().LifeStyle.Singleton)
 				// Command handlers
-				.Register(Component.For<ICommandHandler>().ImplementedBy<GoToHandler>());
+				.Register(Component.For<ICommandHandler>().ImplementedBy<GoToHandler>())
+				.Register(Component.For<ICommandHandler>().ImplementedBy<LoadEditorHandler>());
 		}
 		
 		internal void Register<T,Y>()

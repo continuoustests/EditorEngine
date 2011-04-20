@@ -52,6 +52,7 @@
     <Compile Include="Bootstrapping\DIContainterTests.cs" />
     <Compile Include="Bootstrapping\BootstrapperTests.cs" />
     <Compile Include="Editors\EditorDispatcherTests.cs" />
+    <Compile Include="Commands\Handlers\LoadEditorHandlerTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -62,6 +63,8 @@
     <Folder Include="Commands\Handlers\" />
     <Folder Include="Bootstrapping\" />
     <Folder Include="Editors\" />
+    <Folder Include="FileSystem\" />
+    <Folder Include="FileSystem\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EditorEngine.Core\EditorEngine.Core.csproj">

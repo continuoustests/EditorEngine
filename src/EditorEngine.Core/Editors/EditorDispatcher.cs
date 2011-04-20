@@ -1,7 +1,12 @@
 using System;
+using System.Linq;
 using EditorEngine.Core.Messaging;
 using EditorEngine.Core.Messaging.Messages;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using EditorEngine.Core.FileSystem;
+using System.Threading;
 
 namespace EditorEngine.Core.Editors
 {
@@ -11,6 +16,30 @@ namespace EditorEngine.Core.Editors
 	{
 		private object _padlock = new object();
 		private IEditor _editor = null;
+		private IPluginLoader _pluginFactory;
+		private IMessageDispatcher _dispatcher;
+		
+		public EditorDispatcher(IPluginLoader pluginFactory, IMessageDispatcher dispatcher)
+		{
+			_pluginFactory = pluginFactory;
+			_dispatcher = dispatcher;
+			ThreadPool.QueueUserWorkItem(shutdownTimer);
+		}
+		
+		private void shutdownTimer(object state)
+		{
+			while (true)
+			{
+				Thread.Sleep(500);
+				if (_editor == null)
+					continue;
+				if (!_editor.IsAlive)
+				{
+					_dispatcher.Publish(new ShutdownMessage());
+					break;
+				}
+			}
+		}
 		
 		private void editor(Action invocation)
 		{
@@ -34,35 +63,14 @@ namespace EditorEngine.Core.Editors
 		
 		public void Consume(EditorLoadMessage message)
 		{
-			_editor = new Test_geditEditor();
+			_editor = _pluginFactory.Load(message.Editor);
+			if (_editor != null)
+				_editor.Initialize(null);
 		}
 		
 		public void Consume(EditorGoToMessage message)
 		{
-			editor(() => _editor.GoTo(message.File, message.Line, message.Column));
-		}
-	}
-	
-	class Test_geditEditor : IEditor
-	{
-		public void SetFocus()
-		{
-		}
-		
-		public void GoTo(string file, int line, int column)
-		{
-			invoke("{0} +{1}", file, line);
-		}
-		
-		private void invoke(string arguments, params object[] args)
-		{
-			var proc = new Process();
-			proc.StartInfo = new ProcessStartInfo("gedit", string.Format(arguments, args));
-			proc.StartInfo.CreateNoWindow = true;
-			proc.StartInfo.UseShellExecute = false;
-			proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-			proc.Start();
-			proc.WaitForExit();
+			editor(() => _editor.GoTo(new Location(message.File, message.Line, message.Column)));
 		}
 	}
 }
