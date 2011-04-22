@@ -24,6 +24,7 @@ namespace EditorEngine.Core.Endpoints
 		void Handle_serverIncomingMessage (object sender, MessageArgs e)
 		{
 			_dispatcher.Publish(new CommandMessage(e.Message));
+			_server.Send(e.Message); // Pass on to all consuming clients
 		}
 		
 		public void Run(string cmd)

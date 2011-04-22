@@ -41,7 +41,6 @@ namespace gedit
 		
 		public void SetFocus()
 		{
-			throw new System.NotImplementedException();
 		}
 		
 		public void GoTo(Location location)
