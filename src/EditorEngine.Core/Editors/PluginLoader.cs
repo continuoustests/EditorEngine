@@ -4,11 +4,19 @@ using System.IO;
 using System.Reflection;
 using Mono.Cecil;
 using System.Linq;
+using EditorEngine.Core.Endpoints;
 
 namespace EditorEngine.Core.Editors
 {
 	class PluginLoader : IPluginLoader
 	{
+		private ICommandEndpoint _publisher;
+		
+		public PluginLoader(ICommandEndpoint publisher)
+		{
+			_publisher = publisher;
+		}
+		
 		public IEditor Load(string name)
 		{
 			try
@@ -22,7 +30,9 @@ namespace EditorEngine.Core.Editors
 					.FirstOrDefault();
 				if (pluginType == null)
 					return null;
-				return (IEditor) Activator.CreateInstanceFrom(file, pluginType.ToString()).Unwrap();
+				var editor = (IEditor) Activator.CreateInstanceFrom(file, pluginType.ToString()).Unwrap();
+				editor.Publisher = _publisher;
+				return editor;
 			}
 			catch (Exception ex)
 			{

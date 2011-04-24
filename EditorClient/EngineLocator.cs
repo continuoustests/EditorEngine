@@ -16,13 +16,16 @@ namespace EditorClient
 		
 		private IEnumerable<Instance> getInstances(string path)
 		{
-			foreach (var file in Directory.GetFiles(Path.Combine(Path.GetTempPath(), "EditorEngine"), "*.pid"))
+			var dir = Path.Combine(Path.GetTempPath(), "EditorEngine");
+			if (Directory.Exists(dir))
 			{
-				var instance = Instance.Get(file, File.ReadAllLines(file));
-				if (instance != null)
-					yield return instance;
+				foreach (var file in Directory.GetFiles(Path.Combine(Path.GetTempPath(), "EditorEngine"), "*.pid"))
+				{
+					var instance = Instance.Get(file, File.ReadAllLines(file));
+					if (instance != null)
+						yield return instance;
+				}
 			}
-				
 		}
 		
 		private bool canConnectTo(Instance info)

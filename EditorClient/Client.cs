@@ -7,7 +7,7 @@ using System.Threading;
 using System.Linq;
 namespace EditorClient
 {
-	class Client
+	public class Client
 	{
         private NetworkStream _stream;
         readonly byte[] _buffer = new byte[1000000];

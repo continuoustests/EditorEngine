@@ -8,18 +8,28 @@ using System.Linq;
 
 namespace EditorEngine.Core.Endpoints.Tcp
 {
-	class TcpServer : ITcpServer
+	public class TcpServer : ITcpServer
 	{
 		private Socket _listener = null;
 		private List<NetworkStream> _clients = new List<NetworkStream>();
 		private byte[] _buffer = new byte[5000];
 		private MemoryStream _readBuffer = new MemoryStream();
 		private int _currentPort = 0;
+		private string _messageTermination = null;
 		
 		public event EventHandler ClientConnected;
 		public event EventHandler<MessageArgs> IncomingMessage;
 		
 		public int Port { get { return _currentPort; } }
+		
+		public TcpServer()
+		{
+		}
+		
+		public TcpServer(string messageTermination)
+		{
+			_messageTermination = messageTermination;
+		}
 		
 		public void Start()
 		{
@@ -64,10 +74,14 @@ namespace EditorEngine.Core.Endpoints.Tcp
                 if(x == 0) return;
                 for (int i = 0; i < x;i++)
                 {
-					if (_buffer[i].Equals(0))
+					if (isEndOfMessage(i))
                     {
                         byte[] data = _readBuffer.ToArray();
-                        var actual = Encoding.UTF8.GetString(data, 0, data.Length);
+                        string actual;
+						if (_messageTermination == null)
+							actual = Encoding.UTF8.GetString(data, 0, data.Length);
+						else
+						    actual = Encoding.UTF8.GetString(data, 0, data.Length - (_messageTermination.Length - 1));
 						if (IncomingMessage != null)
 							IncomingMessage(this, new MessageArgs(actual));
                         _readBuffer.SetLength(0);
@@ -85,6 +99,20 @@ namespace EditorEngine.Core.Endpoints.Tcp
             }
         }
 		
+		private bool isEndOfMessage(int index)
+		{
+			if (_messageTermination == null)
+				return _buffer[index].Equals(0);
+			if (_messageTermination.Length > (index + 1))
+				return false;
+			for (int i = index; i > (index - _messageTermination.Length); i--)
+			{
+				if (!Encoding.UTF8.GetString(new byte[] { _buffer[i]}).Equals(_messageTermination.Substring(_messageTermination.Length - (index - i) - 1, 1)))
+					return false;
+			}
+			return true;
+		}
+		
 		private void disconnect(NetworkStream stream)
 		{
 			lock(_clients)
@@ -98,7 +126,11 @@ namespace EditorEngine.Core.Endpoints.Tcp
             lock (_clients)
 			{
 				// Add message terminate char
-				byte[] data = Encoding.UTF8.GetBytes(message).Concat(new byte[] { 0x0 }).ToArray();
+				byte[] data;
+				if (_messageTermination == null)
+					data = Encoding.UTF8.GetBytes(message).Concat(new byte[] { 0x0 }).ToArray();
+				else
+					data = Encoding.UTF8.GetBytes(message + _messageTermination).ToArray();
                 SendToClients(data);
             }
         }

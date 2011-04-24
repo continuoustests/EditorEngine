@@ -15,9 +15,19 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
         private readonly MemoryStream _readBuffer = new MemoryStream();
         private Queue queue = new Queue();
 		private bool IsSending = false;
+		private string _messageTermination = null;
 		
 		public string RecievedMessage { get; private set; }
 
+		public Client()
+		{
+		}
+		
+		public Client(string terminateString)
+		{
+			_messageTermination = terminateString;
+		}
+		
         public void Connect(int port)
         {
             Connect(port, 0);
@@ -67,10 +77,14 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
                 if(x == 0) Reconnect(0);
                 for (var i = 0; i < x;i++)
                 {
-                    if (_buffer[i] == 0)
+                    if (isEndOfMessage(i))
                     {
                         var data = _readBuffer.ToArray();
-                        var actual = Encoding.UTF8.GetString(data, 0, data.Length);
+						string actual;
+                        if (_messageTermination == null)
+							actual = Encoding.UTF8.GetString(data, 0, data.Length);
+						else
+						    actual = Encoding.UTF8.GetString(data, 0, data.Length - (_messageTermination.Length - 1));
                         RecievedMessage = actual;
                         _readBuffer.SetLength(0);
                     }
@@ -88,6 +102,19 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
             }
         }
 
+		private bool isEndOfMessage(int index)
+		{
+			if (_messageTermination == null)
+				return _buffer[index].Equals(0);
+			if (_messageTermination.Length > (index + 1))
+				return false;
+			for (int i = index; i > (index - _messageTermination.Length); i--)
+			{
+				if (!Encoding.UTF8.GetString(new byte[] { _buffer[i]}).Equals(_messageTermination.Substring(_messageTermination.Length - (index - i) - 1, 1)))
+					return false;
+			}
+			return true;
+		}
 
         public void Send(string o)
         {
@@ -144,7 +171,11 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
             {
                 try
                 {
-					byte[] toSend = Encoding.UTF8.GetBytes(message).Concat(new byte[] { 0x0 }).ToArray();
+					byte[] toSend;
+					if (_messageTermination == null)
+						toSend = Encoding.UTF8.GetBytes(message).Concat(new byte[] { 0x0 }).ToArray();
+					else
+						toSend = Encoding.UTF8.GetBytes(message + _messageTermination).ToArray();
                     _stream.BeginWrite(toSend, 0, toSend.Length, WriteCompleted, _stream);
                 }
                 catch

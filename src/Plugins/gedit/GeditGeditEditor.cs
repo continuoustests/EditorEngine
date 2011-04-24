@@ -2,13 +2,15 @@ using System;
 using EditorEngine;
 using EditorEngine.Core.Editors;
 using System.Diagnostics;
+using EditorEngine.Core.Endpoints;
 
 namespace gedit
 {
-	public class Editor : IEditor
+	public class GeditEditor : IEditor
 	{
-		public Process _process { get; private set; }
+		private Process _process = null;
 		
+		public ICommandEndpoint Publisher { private get; set; }
 		public bool IsAlive
 		{
 			get
@@ -17,11 +19,6 @@ namespace gedit
 					return true;
 				return !_process.HasExited;
 			}
-		}
-		
-		public Editor()
-		{
-			_process = null;
 		}
 		
 		public void Initialize(Location location)

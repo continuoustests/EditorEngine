@@ -3,7 +3,7 @@ using System.ServiceModel;
 
 namespace EditorEngine.Core.Endpoints
 {
-	interface ICommandEndpoint
+	public interface ICommandEndpoint
 	{
 		void Run(string cmd);
 	}

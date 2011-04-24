@@ -14,8 +14,41 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
 		[SetUp]
 		public void Setup()
 		{
-			_server = new ServerWrapper();
+			_server = new ServerWrapper(null);
 			_client = new Client();
+			_server.Start();
+			_client.Connect(_server.Port);
+			Wait.ForOneSecond().OrUntil(() => { return _server.ClientConnected; });
+		}
+		
+		[Test]
+		public void Should_send_message()
+		{
+			_server.Send("Some message");
+			Wait.ForOneSecond().OrUntil(() => { return _client.RecievedMessage != null; });
+			Assert.That(_client.RecievedMessage, Is.EqualTo("Some message"));
+		}
+		
+		[Test]
+		public void Should_recieve_message()
+		{
+			_client.Send("A message");
+			Wait.ForOneSecond().OrUntil(() => { return _server.RecievedMessage != null; });
+			Assert.That(_server.RecievedMessage, Is.EqualTo("A message"));
+		}
+	}
+	
+	[TestFixture]
+	public class TcpServerMessageTerminationTests
+	{
+		private ServerWrapper _server;
+		private Client _client;
+		
+		[SetUp]
+		public void Setup()
+		{
+			_server = new ServerWrapper("end");
+			_client = new Client("end");
 			_server.Start();
 			_client.Connect(_server.Port);
 			Wait.ForOneSecond().OrUntil(() => { return _server.ClientConnected; });
@@ -47,10 +80,13 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
 		public bool ClientConnected { get; private set; }
 		public string RecievedMessage { get; private set; }
 		
-		public ServerWrapper()
+		public ServerWrapper(string terminateString)
 		{
 			RecievedMessage = null;
-			_server = new TcpServer();
+			if (terminateString == null)
+				_server = new TcpServer();
+			else
+				_server = new TcpServer(terminateString);
 			_server.ClientConnected += Handle_serverClientConnected;
 			_server.IncomingMessage += Handle_serverIncomingMessage;
 		}

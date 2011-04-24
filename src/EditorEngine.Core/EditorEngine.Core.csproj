@@ -87,5 +87,7 @@
     <Folder Include="Bootstrapping\" />
     <Folder Include="Editors\" />
     <Folder Include="FileSystem\" />
+    <Folder Include="Communication\" />
+    <Folder Include="Communication\" />
   </ItemGroup>
 </Project>

@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{0921
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gedit", "src\Plugins\gedit\gedit.csproj", "{C0C43FB8-9459-496D-8DAD-1BB9907A8238}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vim", "src\Plugins\vim\vim.csproj", "{D363CB71-4798-4B2C-A243-71C9DB28CDC6}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorClient", "EditorClient\EditorClient.csproj", "{2CFDE195-E290-44FC-91DA-D4E29954B696}"
 EndProject
 Global
@@ -37,6 +39,10 @@ Global
 		{C0C43FB8-9459-496D-8DAD-1BB9907A8238}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0C43FB8-9459-496D-8DAD-1BB9907A8238}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0C43FB8-9459-496D-8DAD-1BB9907A8238}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D363CB71-4798-4B2C-A243-71C9DB28CDC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D363CB71-4798-4B2C-A243-71C9DB28CDC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D363CB71-4798-4B2C-A243-71C9DB28CDC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D363CB71-4798-4B2C-A243-71C9DB28CDC6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D4A461BE-F533-4720-A5FC-443B4D3471E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D4A461BE-F533-4720-A5FC-443B4D3471E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4A461BE-F533-4720-A5FC-443B4D3471E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +51,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{688CCD89-39F6-4519-8E21-AF6B23EAB3C9} = {0F8983C9-AAEA-4822-9F73-3C8FC3248534}
 		{C0C43FB8-9459-496D-8DAD-1BB9907A8238} = {09219646-D889-4018-848C-A727E37F78A5}
+		{D363CB71-4798-4B2C-A243-71C9DB28CDC6} = {09219646-D889-4018-848C-A727E37F78A5}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\EditorEngine\EditorEngine.csproj

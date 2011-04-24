@@ -28,3 +28,4 @@ cp $BINARYDIR/EditorClient.exe $DEPLOYDIR/
 cp $BINARYDIR/EditorEngine.exe $DEPLOYDIR/
 cp $BINARYDIR/EditorEngine.Core.dll $DEPLOYDIR/
 cp -r $BINARYDIR/gedit.dll $DEPLOYDIR/plugins
+cp -r $BINARYDIR/vim.dll $DEPLOYDIR/plugins

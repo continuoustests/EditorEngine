@@ -1,7 +1,7 @@
 using System;
 namespace EditorEngine.Core.Endpoints.Tcp
 {
-	class MessageArgs : EventArgs
+	public class MessageArgs : EventArgs
 	{
 		public string Message { get; private set; }
 		
@@ -11,7 +11,7 @@ namespace EditorEngine.Core.Endpoints.Tcp
 		}
 	}
 	
-	interface ITcpServer
+	public interface ITcpServer
 	{
 		event EventHandler ClientConnected;
 		event EventHandler<MessageArgs> IncomingMessage;

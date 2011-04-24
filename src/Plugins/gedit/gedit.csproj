@@ -34,7 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Editor.cs" />
+    <Compile Include="GeditGeditEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\EditorEngine.Core\EditorEngine.Core.csproj">
