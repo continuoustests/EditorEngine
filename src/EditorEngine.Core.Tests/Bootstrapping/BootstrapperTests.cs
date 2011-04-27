@@ -25,7 +25,7 @@ namespace EditorEngine.Core.Tests
 			var client = new Client();
 			client.Connect(port);
 			client.Send("goto FileThatDoesNotExist");
-			Wait.ForOneSecond().OrUntil(() => { return consumer.Message != null; });
+			Wait.ForTwoSecond().OrUntil(() => { return consumer.Message != null; });
 			Bootstrapper.Shutdown();
 			
 			Assert.That(consumer.Message, Is.Not.Null);

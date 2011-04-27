@@ -53,6 +53,7 @@
     <Compile Include="Bootstrapping\BootstrapperTests.cs" />
     <Compile Include="Editors\EditorDispatcherTests.cs" />
     <Compile Include="Commands\Handlers\LoadEditorHandlerTests.cs" />
+    <Compile Include="Commands\Handlers\SetFocusHandlerTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

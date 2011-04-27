@@ -53,12 +53,20 @@ namespace EditorEngine.Core.Tests.Editors
 		}
 		
 		[Test]
+		public void Should_set_focus()
+		{
+			_editor.Stub(x => x.IsAlive).Return(true);
+			_dispatcher.Consume(new EditorSetFocusMessage());
+			_editor.AssertWasCalled(method => method.SetFocus());
+		}
+		
+		[Test]
 		public void When_process_id_is_not_a_running_shutdown_message_should_be_published()
 		{
 			_editor.Stub(x => x.IsAlive).Return(false);
 			_pluginFactory.Stub(x => x.Load("gedit")).Return(_editor);
 			_dispatcher.Consume(new EditorLoadMessage("gedit"));
-			Wait.ForOneSecond().OrUntil(() => { return _messageDispatcher.GetPublishedMessage<ShutdownMessage>() != null; });
+			Wait.ForTwoSecond().OrUntil(() => { return _messageDispatcher.GetPublishedMessage<ShutdownMessage>() != null; });
 			_messageDispatcher.Published<ShutdownMessage>();
 		}
 	}

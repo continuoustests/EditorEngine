@@ -32,10 +32,12 @@ namespace EditorEngine.Core.Bootstrapping
 				.Register(Component.For<IConsumerOf<CommandMessage>>().ImplementedBy<CommandDispatcher>().LifeStyle.Singleton)
 				.Register(Component.For<IConsumerOf<EditorLoadMessage>>()
 							  .Forward<IConsumerOf<EditorGoToMessage>>()
+					          .Forward<IConsumerOf<EditorSetFocusMessage>>()
 					          .ImplementedBy<EditorDispatcher>().LifeStyle.Singleton)
 				// Command handlers
 				.Register(Component.For<ICommandHandler>().ImplementedBy<GoToHandler>())
-				.Register(Component.For<ICommandHandler>().ImplementedBy<LoadEditorHandler>());
+				.Register(Component.For<ICommandHandler>().ImplementedBy<LoadEditorHandler>())
+				.Register(Component.For<ICommandHandler>().ImplementedBy<SetFocusHandler>());
 		}
 		
 		internal void Register<T,Y>()

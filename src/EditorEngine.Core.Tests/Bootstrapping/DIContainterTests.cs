@@ -24,10 +24,11 @@ namespace EditorEngine.Core.Tests.Bootstrapping
 			Assert.That(container.Resolve<IPluginLoader>(), Is.InstanceOf<IPluginLoader>());
 			
 			Assert.That(container.ResolveAll<IService>().Length, Is.EqualTo(1));
-			Assert.That(container.ResolveAll<ICommandHandler>().Length, Is.EqualTo(2));
+			Assert.That(container.ResolveAll<ICommandHandler>().Length, Is.EqualTo(3));
 			Assert.That(container.ResolveAll<IConsumerOf<CommandMessage>>().Length, Is.EqualTo(1));
 			Assert.That(container.ResolveAll<IConsumerOf<EditorGoToMessage>>().Length, Is.EqualTo(1));
 			Assert.That(container.ResolveAll<IConsumerOf<EditorLoadMessage>>().Length, Is.EqualTo(1));
+			Assert.That(container.ResolveAll<IConsumerOf<EditorSetFocusMessage>>().Length, Is.EqualTo(1));
 		}
 	}
 }

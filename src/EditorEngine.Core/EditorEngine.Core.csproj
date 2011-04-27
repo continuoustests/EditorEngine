@@ -75,6 +75,8 @@
     <Compile Include="FileSystem\IFS.cs" />
     <Compile Include="Editors\PluginLoader.cs" />
     <Compile Include="Editors\IPluginLoader.cs" />
+    <Compile Include="Commands\Handlers\SetFocusHandler.cs" />
+    <Compile Include="Messaging\Messages\EditorSetFocusMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

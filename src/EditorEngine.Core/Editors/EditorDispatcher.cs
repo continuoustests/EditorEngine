@@ -12,7 +12,8 @@ namespace EditorEngine.Core.Editors
 {
 	class EditorDispatcher :
 		IConsumerOf<EditorGoToMessage>,
-		IConsumerOf<EditorLoadMessage>
+		IConsumerOf<EditorLoadMessage>,
+		IConsumerOf<EditorSetFocusMessage>
 	{
 		private object _padlock = new object();
 		private IEditor _editor = null;
@@ -52,7 +53,6 @@ namespace EditorEngine.Core.Editors
 			{
 				if (_editor == null) return;
 				invocation.Invoke();
-				_editor.SetFocus();
 			}
 		}
 		
@@ -71,6 +71,12 @@ namespace EditorEngine.Core.Editors
 		public void Consume(EditorGoToMessage message)
 		{
 			editor(() => _editor.GoTo(new Location(message.File, message.Line, message.Column)));
+			editor(() => _editor.SetFocus());
+		}
+		
+		public void Consume(EditorSetFocusMessage message)
+		{
+			editor(() => _editor.SetFocus());
 		}
 	}
 }

@@ -18,14 +18,14 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
 			_client = new Client();
 			_server.Start();
 			_client.Connect(_server.Port);
-			Wait.ForOneSecond().OrUntil(() => { return _server.ClientConnected; });
+			Wait.ForTwoSecond().OrUntil(() => { return _server.ClientConnected; });
 		}
 		
 		[Test]
 		public void Should_send_message()
 		{
 			_server.Send("Some message");
-			Wait.ForOneSecond().OrUntil(() => { return _client.RecievedMessage != null; });
+			Wait.ForTwoSecond().OrUntil(() => { return _client.RecievedMessage != null; });
 			Assert.That(_client.RecievedMessage, Is.EqualTo("Some message"));
 		}
 		
@@ -33,7 +33,7 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
 		public void Should_recieve_message()
 		{
 			_client.Send("A message");
-			Wait.ForOneSecond().OrUntil(() => { return _server.RecievedMessage != null; });
+			Wait.ForTwoSecond().OrUntil(() => { return _server.RecievedMessage != null; });
 			Assert.That(_server.RecievedMessage, Is.EqualTo("A message"));
 		}
 	}
@@ -51,14 +51,14 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
 			_client = new Client("end");
 			_server.Start();
 			_client.Connect(_server.Port);
-			Wait.ForOneSecond().OrUntil(() => { return _server.ClientConnected; });
+			Wait.ForTwoSecond().OrUntil(() => { return _server.ClientConnected; });
 		}
 		
 		[Test]
 		public void Should_send_message()
 		{
 			_server.Send("Some message");
-			Wait.ForOneSecond().OrUntil(() => { return _client.RecievedMessage != null; });
+			Wait.ForTwoSecond().OrUntil(() => { return _client.RecievedMessage != null; });
 			Assert.That(_client.RecievedMessage, Is.EqualTo("Some message"));
 		}
 		
@@ -66,7 +66,7 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
 		public void Should_recieve_message()
 		{
 			_client.Send("A message");
-			Wait.ForOneSecond().OrUntil(() => { return _server.RecievedMessage != null; });
+			Wait.ForTwoSecond().OrUntil(() => { return _server.RecievedMessage != null; });
 			Assert.That(_server.RecievedMessage, Is.EqualTo("A message"));
 		}
 	}

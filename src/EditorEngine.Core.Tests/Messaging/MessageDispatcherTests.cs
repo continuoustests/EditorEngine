@@ -24,7 +24,7 @@ namespace EditorEngine.Core.Tests.Messaging
 		{
 			_dispatcher.Register(_consumer);
 			_dispatcher.Publish(_message);
-			Wait.ForOneSecond().OrUntil(() => { return _consumer.HasConsumedMessage; });
+			Wait.ForTwoSecond().OrUntil(() => { return _consumer.HasConsumedMessage; });
 			_consumer.Consumed(_message);
 		}
 		
@@ -33,7 +33,7 @@ namespace EditorEngine.Core.Tests.Messaging
 		{
 			_dispatcher.Register(() => { return _consumer; });
 			_dispatcher.Publish(_message);
-			Wait.ForOneSecond().OrUntil(() => { return _consumer.HasConsumedMessage; });
+			Wait.ForTwoSecond().OrUntil(() => { return _consumer.HasConsumedMessage; });
 			_consumer.Consumed(_message);			
 		}
 		
@@ -47,7 +47,7 @@ namespace EditorEngine.Core.Tests.Messaging
 										return new object[] {};
 									});
 			_dispatcher.Publish(_message);
-			Wait.ForOneSecond().OrUntil(() => { return _consumer.HasConsumedMessage; });
+			Wait.ForTwoSecond().OrUntil(() => { return _consumer.HasConsumedMessage; });
 			_consumer.Consumed(_message);			
 		}
 	}
@@ -75,9 +75,9 @@ namespace EditorEngine.Core.Tests.Messaging
 	
 	class Wait
 	{
-		public static Wait ForOneSecond()
+		public static Wait ForTwoSecond()
 		{
-			return new Wait(DateTime.Now.AddSeconds(1));
+			return new Wait(DateTime.Now.AddSeconds(2));
 		}
 		
 		private DateTime _timeout;
