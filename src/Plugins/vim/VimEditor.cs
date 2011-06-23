@@ -56,7 +56,7 @@ namespace vim
 		private List<Buffer> _buffers = new List<Buffer>();
 		private int _correlationCounter = 1;
 		private List<ReplyResult> _replys = new List<ReplyResult>();
-		private bool _debug = true;
+		private bool _debug = false;
 		
 		public ITcpServer Server
 		{ 
