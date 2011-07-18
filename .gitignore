@@ -11,6 +11,7 @@ _ReSharper.*
 *.cache
 *.userprefs
 *.pidb
+*.bin
 SolutionVersion.cs
 lib/MoMA/Reports/submit.xml
 build_output
