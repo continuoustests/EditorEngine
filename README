@@ -8,7 +8,7 @@ The project is in it's early stages and has only been run on Linux yet. Use the 
 Start the server
 ./EditorEngine.exe /key/path
 
-Execute from inside or below key path as it uses this to find and connect to engine.
+Execute client commands from inside or below key path as it uses this to find and connect to engine.
 This command will launch the editor itself. After editor is closed engine shuts down automatically
 ./EditorClient.exe editor vim
 
