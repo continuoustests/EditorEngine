@@ -2,6 +2,7 @@
 
 BINARYDIR=$(cd $(dirname "$0"); pwd)/build_output
 DEPLOYDIR=$(cd $(dirname "$0"); pwd)/ReleaseBinaries
+SOURCEDIR=$(cd $(dirname "$0"); pwd)/src
 
 if [ ! -d $BINARYDIR ]; then
 {
@@ -29,3 +30,5 @@ cp $BINARYDIR/EditorEngine.exe $DEPLOYDIR/
 cp $BINARYDIR/EditorEngine.Core.dll $DEPLOYDIR/
 cp -r $BINARYDIR/gedit.dll $DEPLOYDIR/plugins
 cp -r $BINARYDIR/vim.dll $DEPLOYDIR/plugins
+cp -r $SOURCEDIR/Plugins/vim/vim.executable $DEPLOYDIR/plugins
+cp -r $SOURCEDIR/Plugins/vim/vim.parameters $DEPLOYDIR/plugins

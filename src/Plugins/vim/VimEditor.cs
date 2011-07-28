@@ -7,6 +7,7 @@ using EditorEngine.Core.Endpoints.Tcp;
 using System.Threading;
 using EditorEngine.Core.Endpoints;
 using System.Collections.Generic;
+using System.Reflection;
 namespace vim
 {
 	public class Buffer
@@ -57,6 +58,8 @@ namespace vim
 		private int _correlationCounter = 1;
 		private List<ReplyResult> _replys = new List<ReplyResult>();
 		private bool _debug = false;
+		private string _executable = null;
+		private string _parameters = null;
 		
 		public ITcpServer Server
 		{ 
@@ -91,17 +94,47 @@ namespace vim
 			_server.Start();
 			if (_debug)
 				Console.WriteLine("Server started and running on port {0}", _server.Port);
-			var argument = string.Format("-nb:127.0.0.1:{0}:mypass -c \"map <F8> <F21>\"", _server.Port);
+			_executable = getExecutable();
+			_parameters = getParameters();
 			if (_process != null)
 				_process.Kill();
 			_process = new Process();
-			_process.StartInfo = new ProcessStartInfo("gvim", argument);
+			_process.StartInfo = new ProcessStartInfo(_executable, _parameters);
 			_process.StartInfo.CreateNoWindow = true;
 			_process.StartInfo.UseShellExecute = true;
 			_process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			_process.Start();
 			Thread.Sleep(500);
 			GoTo(location);
+		}
+		
+		private string getExecutable()
+		{
+			try
+			{
+				var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+				return File.ReadAllText(Path.Combine(path, "vim.executable"))
+					.Replace(Environment.NewLine, "");
+			}
+			catch
+			{
+				return "gvim";
+			}
+		}
+
+		private string getParameters()
+		{
+			try
+			{
+				var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+				return File.ReadAllText(Path.Combine(path, "vim.parameters"))
+					.Replace("{0}", _server.Port.ToString())
+					.Replace(Environment.NewLine, "");
+			}
+			catch
+			{
+				return string.Format("-nb:127.0.0.1:{0}:mypass -c \"map <F8> <F21>\"", _server.Port);
+			}
 		}
 
 		void Handle_serverClientConnected (object sender, EventArgs e)
