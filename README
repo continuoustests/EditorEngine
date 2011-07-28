@@ -1,3 +1,17 @@
 EditorEngine
 
 EditorEngine is an open source project maintained by the ContinuousTests team www.continuoustests.com. The purpose of this tool is to provide a set of features around vairous text editors. It contains a plugin for each supported editor. The features are basic feedback like keypress and actions like open a file on a spesific location. It was developed mainly as a generic backend for the project OpenIDENet.
+
+Getting started
+The project is in it's early stages and has only been run on Linux yet. Use the deploy.sh script to build and you'll find the binaries under ReleaseBinaries.
+
+Start the server
+./EditorEngine.exe /key/path
+
+Execute from inside or below key path as it uses this to find and connect to engine.
+This command will launch the editor itself. After editor is closed engine shuts down automatically
+./EditorClient.exe editor vim
+
+Open a file in the editor on line 12 column 3
+./EditorClient.exe goto "/key/path/subdir/somefile.cs|12|3"
+
