@@ -22,7 +22,7 @@ namespace EditorEngine.Core.Bootstrapping
 			stopServices();
 		}
 		
-		public static void Register<T,Y>()
+		public static void Register<T,Y>() where Y : T
 		{
 			_container.Register<T,Y>();
 		}

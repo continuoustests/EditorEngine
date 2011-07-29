@@ -169,7 +169,7 @@ namespace vim
 			if (location == null)
 				return;
 			var id = applyBufferID(location.File, false);
-			send("{0}:editFile!0 \"{1}\"", id, location.File);
+			send("{0}:editFile!0 \"{1}\"", id, location.File.Replace("\\", "\\\\"));
 			send("{0}:setDot!0 {1}/{2}", id, location.Line, location.Column);
 		}
 		

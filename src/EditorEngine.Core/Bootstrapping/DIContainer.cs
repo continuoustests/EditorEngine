@@ -40,7 +40,7 @@ namespace EditorEngine.Core.Bootstrapping
 				.Register(Component.For<ICommandHandler>().ImplementedBy<SetFocusHandler>());
 		}
 		
-		internal void Register<T,Y>()
+		internal void Register<T,Y>() where Y : T
 		{
 			_container.Register(Component.For<T>().ImplementedBy<Y>().LifeStyle.Singleton);
 		}
