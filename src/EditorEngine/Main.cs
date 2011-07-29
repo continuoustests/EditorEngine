@@ -12,7 +12,6 @@ namespace EditorEngine
 		
 		public static void Main (string[] args)
 		{
-            args = new string[] { @"C:\Users\n06261\src\EditorEngine\ReleaseBinaries" };
 			if (args.Length != 1)
 			{
 				printUsages();
