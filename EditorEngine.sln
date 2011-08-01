@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vim.Tests", "src\Plugins\vi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorClient", "EditorClient\EditorClient.csproj", "{2CFDE195-E290-44FC-91DA-D4E29954B696}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "configured", "src\Plugins\configured\configured.csproj", "{17E0F7DF-1882-4FAB-9C39-857AB0F53ED5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{2CFDE195-E290-44FC-91DA-D4E29954B696}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CFDE195-E290-44FC-91DA-D4E29954B696}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CFDE195-E290-44FC-91DA-D4E29954B696}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17E0F7DF-1882-4FAB-9C39-857AB0F53ED5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17E0F7DF-1882-4FAB-9C39-857AB0F53ED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17E0F7DF-1882-4FAB-9C39-857AB0F53ED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17E0F7DF-1882-4FAB-9C39-857AB0F53ED5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +68,7 @@ Global
 		{C0C43FB8-9459-496D-8DAD-1BB9907A8238} = {09219646-D889-4018-848C-A727E37F78A5}
 		{D363CB71-4798-4B2C-A243-71C9DB28CDC6} = {09219646-D889-4018-848C-A727E37F78A5}
 		{E2E192B2-644C-450C-9B5B-30540ADC5AB3} = {09219646-D889-4018-848C-A727E37F78A5}
+		{17E0F7DF-1882-4FAB-9C39-857AB0F53ED5} = {09219646-D889-4018-848C-A727E37F78A5}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = src\EditorEngine\EditorEngine.csproj

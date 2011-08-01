@@ -32,3 +32,5 @@ cp -r $BINARYDIR/gedit.dll $DEPLOYDIR/plugins
 cp -r $BINARYDIR/vim.dll $DEPLOYDIR/plugins
 cp -r $SOURCEDIR/Plugins/vim/vim.executable $DEPLOYDIR/plugins
 cp -r $SOURCEDIR/Plugins/vim/vim.parameters $DEPLOYDIR/plugins
+cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins
+cp -r $SOURCEDIR/Plugins/configured/configured.editor $DEPLOYDIR/plugins

@@ -27,3 +27,5 @@ xcopy %BINARYDIR%\gedit.dll %DEPLOYDIR%\plugins\
 xcopy %BINARYDIR%\vim.dll %DEPLOYDIR%\plugins\
 xcopy %SRC%\Plugins\vim\vim.executable %DEPLOYDIR%\plugins\
 xcopy %SRC%\Plugins\vim\vim.parameters %DEPLOYDIR%\plugins\
+xcopy %BINARYDIR%\configured.dll %DEPLOYDIR%\plugins\
+xcopy %SRC%\Plugins\configured\configured.editor %DEPLOYDIR%\plugins\
