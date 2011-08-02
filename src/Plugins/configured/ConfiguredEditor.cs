@@ -78,6 +78,7 @@ namespace configured
                     .Replace("{1}", location.Line.ToString())
                     .Replace("{2}", location.Column.ToString()),
                 false);
+            SetFocus();
         }
 
         private void tryOpenConfiguration()
