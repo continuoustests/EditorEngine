@@ -155,6 +155,7 @@ namespace configured
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.CreateNoWindow = visible;
             process.StartInfo.UseShellExecute = visible;
+            process.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
             if (visible)
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             else
