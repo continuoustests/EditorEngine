@@ -78,6 +78,7 @@ namespace configured
                     .Replace("{1}", location.Line.ToString())
                     .Replace("{2}", location.Column.ToString()),
                 false);
+            SetFocus();
         }
 
         private void tryOpenConfiguration()
@@ -154,6 +155,7 @@ namespace configured
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.CreateNoWindow = visible;
             process.StartInfo.UseShellExecute = visible;
+            process.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
             if (visible)
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             else
