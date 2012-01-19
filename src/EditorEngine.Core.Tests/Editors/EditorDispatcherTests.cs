@@ -61,12 +61,12 @@ namespace EditorEngine.Core.Tests.Editors
 		}
 		
 		[Test]
-		public void When_process_id_is_not_a_running_shutdown_message_should_be_published()
+		public void When_process_id_is_not_running_a_shutdown_message_should_be_published()
 		{
 			_editor.Stub(x => x.IsAlive).Return(false);
 			_pluginFactory.Stub(x => x.Load("gedit")).Return(_editor);
 			_dispatcher.Consume(new EditorLoadMessage("gedit"));
-			Wait.ForTwoSecond().OrUntil(() => { return _messageDispatcher.GetPublishedMessage<ShutdownMessage>() != null; });
+			Wait.ForFiveSecond().OrUntil(() => { return _messageDispatcher.GetPublishedMessage<ShutdownMessage>() != null; });
 			_messageDispatcher.Published<ShutdownMessage>();
 		}
 	}

@@ -18,9 +18,8 @@ namespace EditorEngine.Core.Tests
 		{
 			var guid = Guid.NewGuid().ToString();
 			Bootstrapper.Initialize(guid);
-			Bootstrapper.Register<IConsumerOf<UsageErrorMessage>, UsageFailureConsumer>();
-			var consumers = Bootstrapper.ResolveAll<IConsumerOf<UsageErrorMessage>>();
-			var consumer = (UsageFailureConsumer) consumers[consumers.Length - 1];
+			var consumer = new UsageFailureConsumer();
+			Bootstrapper.Register<UsageErrorMessage>(consumer);
 			var port = getPort(guid);
 			var client = new Client();
 			client.Connect(port);

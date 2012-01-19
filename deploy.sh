@@ -23,7 +23,6 @@ echo $BINARYDIR
 
 xbuild EditorEngine.sln /target:rebuild /property:OutDir=$BINARYDIR/;Configuration=Release;
 
-cp $BINARYDIR/Castle.* $DEPLOYDIR/
 cp $BINARYDIR/Mono.Cecil.dll $DEPLOYDIR/
 cp $BINARYDIR/EditorClient.exe $DEPLOYDIR/
 cp $BINARYDIR/EditorEngine.exe $DEPLOYDIR/

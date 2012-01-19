@@ -13,7 +13,6 @@ namespace EditorEngine.Core.Bootstrapping
 			_key = key;
 			_container = new DIContainer();
 			_container.Initalize();
-			setupMessaging();
 			startServices();
 		}
 		
@@ -21,37 +20,21 @@ namespace EditorEngine.Core.Bootstrapping
 		{
 			stopServices();
 		}
-		
-		public static void Register<T,Y>() where Y : T
+
+		public static void Register<T>(IConsumerOf<T> consumer) where T : Message
 		{
-			_container.Register<T,Y>();
-		}
-		
-		public static T Resolve<T>()
-		{
-			return _container.Resolve<T>();
-		}
-		
-		public static T[] ResolveAll<T>()
-		{
-			return _container.ResolveAll<T>();
-		}
-		
-		private static void setupMessaging()
-		{
-			var dispatcher = _container.Resolve<IMessageDispatcher>();
-			dispatcher.Register((type) => { return _container.ResolveAll(type); });
+			_container.Register<T>(consumer);
 		}
 		
 		private static void startServices()
 		{
-			_container.ResolveAll<IService>().ToList()
+			_container.GetServices().ToList()
 				.ForEach(service => service.Start(_key));
 		}
 		
 		private static void stopServices()
 		{
-			_container.ResolveAll<IService>().ToList()
+			_container.GetServices().ToList()
 				.ForEach(service => service.Stop());
 		}
 	}

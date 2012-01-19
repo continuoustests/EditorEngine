@@ -80,6 +80,11 @@ namespace EditorEngine.Core.Tests.Messaging
 			return new Wait(DateTime.Now.AddSeconds(2));
 		}
 		
+		public static Wait ForFiveSecond()
+		{
+			return new Wait(DateTime.Now.AddSeconds(5));
+		}
+
 		private DateTime _timeout;
 		
 		public Wait(DateTime timeout)

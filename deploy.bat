@@ -18,7 +18,6 @@ mkdir %DEPLOYDIR%\plugins
 
 %SystemRoot%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe %SOURCEDIR%EditorEngine.sln  /property:OutDir=%BINARYDIR%\;Configuration=Release /target:rebuild
 
-xcopy /I %BINARYDIR%\Castle.* %DEPLOYDIR%\
 xcopy %BINARYDIR%\Mono.Cecil.dll %DEPLOYDIR%\
 xcopy %BINARYDIR%\EditorClient.exe %DEPLOYDIR%\
 xcopy %BINARYDIR%\EditorEngine.exe %DEPLOYDIR%\

@@ -25,8 +25,8 @@ namespace EditorEngine
 			try
 			{
 				Bootstrapper.Initialize(key);
-				Bootstrapper.Register<IConsumerOf<ShutdownMessage>, ShutdownConsumer>();
-				var shutdownConsumer = getShutdownConsumer();
+				var shutdownConsumer = new ShutdownConsumer();
+				Bootstrapper.Register<ShutdownMessage>(shutdownConsumer);
 				shutdownConsumer.Shutdown += HandleShutdownConsumerShutdown;
 				Console.WriteLine("Application running using key path {0}", key);
 				while (!_shutdown)
@@ -45,12 +45,6 @@ namespace EditorEngine
 		static void HandleShutdownConsumerShutdown (object sender, EventArgs e)
 		{
 			_shutdown = true;
-		}
-		
-		private static ShutdownConsumer getShutdownConsumer()
-		{
-			var consumers = Bootstrapper.ResolveAll<IConsumerOf<ShutdownMessage>>();
-			return (ShutdownConsumer) consumers[consumers.Length - 1];
 		}
 		
 		private static void printUsages()

@@ -17,18 +17,8 @@ namespace EditorEngine.Core.Tests.Bootstrapping
 		{
 			var container =  new DIContainer();
 			container.Initalize();
-			
-			Assert.That(container.Resolve<IMessageDispatcher>(), Is.InstanceOf<IMessageDispatcher>());
-			Assert.That(container.Resolve<ICommandEndpoint>(), Is.InstanceOf<ICommandEndpoint>());
-			Assert.That(container.Resolve<IFS>(), Is.InstanceOf<IFS>());
-			Assert.That(container.Resolve<IPluginLoader>(), Is.InstanceOf<IPluginLoader>());
-			
-			Assert.That(container.ResolveAll<IService>().Length, Is.EqualTo(1));
-			Assert.That(container.ResolveAll<ICommandHandler>().Length, Is.EqualTo(3));
-			Assert.That(container.ResolveAll<IConsumerOf<CommandMessage>>().Length, Is.EqualTo(1));
-			Assert.That(container.ResolveAll<IConsumerOf<EditorGoToMessage>>().Length, Is.EqualTo(1));
-			Assert.That(container.ResolveAll<IConsumerOf<EditorLoadMessage>>().Length, Is.EqualTo(1));
-			Assert.That(container.ResolveAll<IConsumerOf<EditorSetFocusMessage>>().Length, Is.EqualTo(1));
+
+			Assert.That(container.GetServices()[0], Is.InstanceOf<CommandEndpoint>());
 		}
 	}
 }
