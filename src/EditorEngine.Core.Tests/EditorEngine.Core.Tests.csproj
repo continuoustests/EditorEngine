@@ -60,6 +60,7 @@
     <Compile Include="Editors\EditorDispatcherTests.cs" />
     <Compile Include="Commands\Handlers\LoadEditorHandlerTests.cs" />
     <Compile Include="Commands\Handlers\SetFocusHandlerTests.cs" />
+    <Compile Include="Arguments\PositionArgumentParserTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

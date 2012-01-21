@@ -14,7 +14,7 @@ namespace EditorEngine.Core.Commands.Handlers
 			_dispatcher = dispatcher;
 		}
 				
-		public void Execute(string arguments)
+		public void Execute(string[] arguments)
 		{
 			_dispatcher.Publish(new EditorSetFocusMessage());
 		}

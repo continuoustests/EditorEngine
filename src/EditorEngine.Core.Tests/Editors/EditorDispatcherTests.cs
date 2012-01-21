@@ -6,6 +6,7 @@ using NUnit.Framework;
 using EditorEngine.Core.FileSystem;
 using EditorEngine.Core.Messaging;
 using EditorEngine.Core.Tests.Messaging;
+using EditorEngine.Core.Arguments;
 
 namespace EditorEngine.Core.Tests.Editors
 {
@@ -14,6 +15,7 @@ namespace EditorEngine.Core.Tests.Editors
 	{
 		private EditorDispatcher _dispatcher;
 		private IEditor _editor;
+		private IFileWriter _fileWriter;
 		private IPluginLoader _pluginFactory;
 		private Fake_MessageDispatcher _messageDispatcher;
 		
@@ -23,7 +25,8 @@ namespace EditorEngine.Core.Tests.Editors
 			_messageDispatcher = new Fake_MessageDispatcher();
 			_pluginFactory = MockRepository.GenerateMock<IPluginLoader>();
 			_editor = MockRepository.GenerateMock<IEditor>();
-			_dispatcher = new EditorDispatcher(_pluginFactory, _messageDispatcher);
+			_fileWriter = MockRepository.GenerateMock<IFileWriter>();
+			_dispatcher = new EditorDispatcher(_pluginFactory, _messageDispatcher, _fileWriter);
 			_dispatcher.SetEditor(_editor);
 		}
 		
@@ -60,6 +63,26 @@ namespace EditorEngine.Core.Tests.Editors
 			_editor.AssertWasCalled(method => method.SetFocus());
 		}
 		
+		[Test]
+		public void Should_send_injection_to_editor_if_it_can_handle_it()
+		{
+			_editor.Stub(x => x.IsAlive).Return(true);
+			_editor.Stub(x => x.CanInjectFor("tofile.txt")).Return(true);
+			var msg = new EditorInjectMessage("inectfile.txt", new GoTo() { File = "tofile.txt" });
+			_dispatcher.Consume(msg);
+			_editor.AssertWasCalled(method => method.Inject(msg));
+		}
+		
+		[Test]
+		public void Should_send_injection_to_file_writer_if_editor_cannot_handle_it()
+		{
+			_editor.Stub(x => x.IsAlive).Return(true);
+			_editor.Stub(x => x.CanInjectFor("tofile.txt")).Return(false);
+			var msg = new EditorInjectMessage("inectfile.txt", new GoTo() { File = "tofile.txt" });
+			_dispatcher.Consume(msg);
+			_fileWriter.AssertWasCalled(method => method.Inject(msg));
+		}
+
 		[Test]
 		public void When_process_id_is_not_running_a_shutdown_message_should_be_published()
 		{

@@ -22,17 +22,19 @@ namespace EditorEngine.Core.Tests.Commands
 		{
 			var message = new CommandMessage("MyCommand some arguments");
 			_dispatcher.Consume(message);
-			Assert.That(_command.PassedArguments, Is.EqualTo(message.Arguments));
+			Assert.That(_command.PassedArguments.Length, Is.EqualTo(2));
+			Assert.That(_command.PassedArguments[0], Is.EqualTo("some"));
+			Assert.That(_command.PassedArguments[1], Is.EqualTo("arguments"));
 		}
 	}
 	
 	class Fake_CommandHandler : ICommandHandler
 	{
-		public string PassedArguments { get; private set; }
+		public string[] PassedArguments { get; private set; }
 		
 		public string ID { get { return "MyCommand"; } }
 		
-		public void Execute(string arguments)
+		public void Execute(string[] arguments)
 		{
 			PassedArguments = arguments;
 		}

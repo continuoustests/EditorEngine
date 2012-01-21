@@ -22,35 +22,35 @@ namespace EditorEngine.Core.Tests.Commands.Handlers
 		[Test]
 		public void When_passing_invalid_arguments_it_should_publish_usage_error_message()
 		{
-			_handler.Execute("not valid argument");
+			_handler.Execute(new[] {"not", "valid", "argument" });
 			_dispatcher.Published<UsageErrorMessage>();
 		}
 		
 		[Test]
 		public void When_no_arguments_are_passed_it_should_publish_usage_error_message()
 		{
-			_handler.Execute("");
+			_handler.Execute(new[] {""});
 			_dispatcher.Published<UsageErrorMessage>();
 		}
 		
 		[Test]
 		public void When_too_many_arguments_are_passed_it_should_publish_usage_error_message()
 		{
-			_handler.Execute("1|2|3|4");
+			_handler.Execute(new[] {"1|2|3|4"});
 			_dispatcher.Published<UsageErrorMessage>();
 		}
 		
 		[Test]
 		public void When_file_is_not_an_existing_file_it_should_publish_usage_error_message()
 		{
-			_handler.Execute(string.Format("{0}.NotExisting", Assembly.GetExecutingAssembly().Location));
+			_handler.Execute(new[] {string.Format("{0}.NotExisting", Assembly.GetExecutingAssembly().Location)});
 			_dispatcher.Published<UsageErrorMessage>();
 		}
 		
 		[Test]
 		public void When_passing_valid_arguments_it_should_publish_editor_goto_message()
 		{
-			_handler.Execute(string.Format("{0}|{1}|{2}", Assembly.GetExecutingAssembly().Location, 10, 15));
+			_handler.Execute(new[] {string.Format("{0}|{1}|{2}", Assembly.GetExecutingAssembly().Location, 10, 15)});
 			var messsage = _dispatcher.GetPublishedMessage<EditorGoToMessage>();
 			Assert.That(messsage.File, Is.EqualTo(Assembly.GetExecutingAssembly().Location));
 		}
@@ -58,7 +58,7 @@ namespace EditorEngine.Core.Tests.Commands.Handlers
 		[Test]
 		public void When_passing_a_line_number_it_should_parse_out_a_valid_line_number()
 		{
-			_handler.Execute(string.Format("{0}|12", Assembly.GetExecutingAssembly().Location));
+			_handler.Execute(new[] {string.Format("{0}|12", Assembly.GetExecutingAssembly().Location)});
 			var messsage = _dispatcher.GetPublishedMessage<EditorGoToMessage>();
 			Assert.That(messsage.Line, Is.EqualTo(12));
 		}
@@ -66,7 +66,7 @@ namespace EditorEngine.Core.Tests.Commands.Handlers
 		[Test]
 		public void When_passing_a_column_it_should_parse_out_a_valid_column()
 		{
-			_handler.Execute(string.Format("{0}|0|7", Assembly.GetExecutingAssembly().Location));
+			_handler.Execute(new[] {string.Format("{0}|0|7", Assembly.GetExecutingAssembly().Location)});
 			var messsage = _dispatcher.GetPublishedMessage<EditorGoToMessage>();
 			Assert.That(messsage.Column, Is.EqualTo(7));
 		}

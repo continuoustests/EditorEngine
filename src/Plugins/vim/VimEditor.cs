@@ -6,6 +6,7 @@ using System.IO;
 using EditorEngine.Core.Endpoints.Tcp;
 using System.Threading;
 using EditorEngine.Core.Endpoints;
+using EditorEngine.Core.Messaging.Messages;
 using System.Collections.Generic;
 using System.Reflection;
 namespace vim
@@ -57,7 +58,7 @@ namespace vim
 		private List<Buffer> _buffers = new List<Buffer>();
 		private int _correlationCounter = 1;
 		private List<ReplyResult> _replys = new List<ReplyResult>();
-		private bool _debug = false;
+		private bool _debug = true;
 		private string _executable = null;
 		private string _parameters = null;
 		
@@ -168,16 +169,157 @@ namespace vim
 		{
 			if (location == null)
 				return;
-			var id = applyBufferID(location.File, false);
-			send("{0}:editFile!0 \"{1}\"", id, location.File.Replace("\\", "\\\\"));
-			send("{0}:setDot!0 {1}/{2}", id, location.Line, location.Column);
+			var id = getBufferID(location.File);
+			if (id == -1)
+				id = editFile(location.File);
+			goTo(id, location);
 		}
-		
+
+		private int editFile(string file)
+		{
+			var id = applyBufferID(file, false);
+			send("{0}:editFile!0 \"{1}\"", id, file.Replace("\\", "\\\\"));
+			return id;
+		}
+
+		private void goTo(int buffer, Location location)
+		{
+			send("{0}:setDot!0 {1}/{2}", buffer, location.Line, location.Column);
+		}
+	
+		public void BeginBatchUpdate()
+		{
+			send("0:startAtomic!0");
+		}
+
+		public void EndBatchUpdate()
+		{
+			send("0:endAtomic!0");
+		}
+
+		public bool CanInjectFor(string file)
+		{
+			return true;
+		}
+
+		public void Inject(EditorInjectMessage message)
+		{
+			GoTo(new Location(
+				message.Destination.File,
+				message.Destination.Line,
+				message.Destination.Column));
+			var location = getLocation();
+			if (location == null)
+				return;
+			var newline = "\\n";
+			if (Environment.OSVersion.Platform != PlatformID.Unix &&
+				Environment.OSVersion.Platform != PlatformID.MacOSX)
+				newline = "\\r\\n";
+			var content = runFunction("{0}:getText", location.Buffer.ID);
+			if (content == null)
+				return;
+			var lines = content.Split(new[] { newline }, StringSplitOptions.None);
+			if (lines.Length < location.Line)
+			{
+				if (_debug)
+					Console.WriteLine("Asked for line {0} but document only contained {1} lines",
+						location.Line,
+						lines.Length);
+				return;
+			}
+			var line = lines[location.Line - 1];
+			if (line.Length < location.Column)
+			{
+				if (_debug)
+					Console.WriteLine("Asked for column {0} but line was only {1} chars long",
+						location.Column,
+						line);
+				return;
+			}
+			var lineModified =
+				line.Substring(0, location.Column) +
+				message.Text.Replace(Environment.NewLine, newline) +
+				line.Substring(location.Column, line.Length - location.Column);
+			var length = line.Length;
+			var lastLine = location.Line != lines.Length - 1;
+			if (lastLine)
+				length += newline.Length;
+			send("{0}:remove/0 {1} {2}",
+				location.Buffer.ID,
+				location.Offset - location.Column,
+				length);
+			send("{0}:insert/0 {1} \"{2}\"",
+				location.Buffer.ID,
+				location.Offset - location.Column,
+				lineModified);
+		}	
+
+		public bool CanRemoveFor(string file)
+		{
+			return true;
+		}
+
+		public void Remove(EditorRemoveMessage message)
+		{
+			if (message.Start.Line > message.End.Line)
+				return;
+			GoTo(new Location(
+				message.Start.File,
+				message.Start.Line,
+				message.Start.Column));
+			var location = getLocation();
+			if (message.Start.Line == message.End.Line)
+			{
+				if (message.Start.Column >= message.End.Column)
+					return;
+				send("{0}:remove/0 {1} {2}",
+					location.Buffer.ID,
+					location.Offset,
+					message.End.Column - message.Start.Column);
+				return;
+			}
+
+			var content = runFunction("{0}:getText", location.Buffer.ID);
+			if (content == null)
+				return;
+			var newline = "\\n";
+			if (Environment.OSVersion.Platform != PlatformID.Unix &&
+				Environment.OSVersion.Platform != PlatformID.MacOSX)
+				newline = "\\r\\n";
+			var lines = content.Split(new[] { newline }, StringSplitOptions.None);
+			for (int line = message.End.Line; line >= message.Start.Line; line--)
+			{
+				Console.WriteLine("doing line " + line.ToString() + " nur of lines is " + lines.Length.ToString());
+				var column = 0;
+				if (line == message.Start.Line)
+					column = message.Start.Column;
+				var length = lines[line - 1].Length - column + newline.Length;
+				if (line == message.End.Line)
+					length = message.End.Column;
+				GoTo(new Location(
+					message.Start.File,
+					line,
+					column));
+				location = getLocation();
+				if (location == null)
+					return;
+				send("{0}:remove/0 {1} {2}",
+					location.Buffer.ID,
+					location.Offset,
+					length);
+			}
+		}
+
 		private VIMLocation getLocation()
+		{
+			return getLocation(0);
+		}
+
+		private VIMLocation getLocation(int bufferID)
 		{
 			if (_debug)
 				Console.WriteLine("Getting location");
-			var message = runFunction("0:getCursor");
+			var message = runFunction("{0}:getCursor", bufferID);
 			if (_debug)
 				Console.WriteLine("Function returned " + message);
 			if (message == null)
@@ -230,6 +372,16 @@ namespace vim
 				return;
 			buffer.Close();
 		}
+
+		private int getBufferID(string path)
+		{
+			if (path == "")
+				return -1;
+			var buffer = _buffers.FirstOrDefault(x => x.Fullpath.Equals(path) && !x.Closed);
+			if (buffer == null)
+				return -1;
+			return buffer.ID;
+		}
 		
 		private int applyBufferID(string path, bool setBufferNumber)
 		{
@@ -268,6 +420,12 @@ namespace vim
 		
 		private string runFunction(string function)
 		{
+			return runFunction(function, new object[] {});
+		}
+
+		private string runFunction(string function, params object[] args)
+		{
+			function = string.Format(function, args);
 			ReplyResult reply;
 			lock (_replys)
 			{
@@ -290,6 +448,8 @@ namespace vim
 		{
 			lock (_replys)
 			{
+				if (_replys.Count == 0)
+					return false;
 				var reply = _replys.Where(x => x.AnsweredBy(message)).FirstOrDefault();
 				if (reply == null)
 					return false;

@@ -17,15 +17,15 @@ namespace EditorEngine.Core.Commands.Handlers
 			_dispatcher = dispatcher;
 		}
 		
-		public void Execute(string arguments)
+		public void Execute(string[] arguments)
 		{
-			var argumentCount = arguments.Trim().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).Length;
-			if (argumentCount != 1)
+			if (arguments.Length != 1)
 			{
-				_dispatcher.Publish(new UsageErrorMessage(string.Format("Invalid number of arguments. {0}", getUsage())));
+				_dispatcher.Publish(
+					new UsageErrorMessage(string.Format("Invalid number of arguments. {0}", getUsage())));
 				return;
 			}
-			_dispatcher.Publish(new EditorLoadMessage(arguments.Trim()));
+			_dispatcher.Publish(new EditorLoadMessage(arguments[0].Trim()));
 		}
 		
 		private string getUsage()

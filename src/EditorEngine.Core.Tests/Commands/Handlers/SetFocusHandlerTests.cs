@@ -22,7 +22,7 @@ namespace EditorEngine.Core.Tests.Commands.Handlers
 		[Test]
 		public void When_passing_invalid_arguments_it_should_publish_usage_error_message()
 		{
-			_handler.Execute("");
+			_handler.Execute(new[] {""});
 			_dispatcher.Published<EditorSetFocusMessage>();
 		}
 	}

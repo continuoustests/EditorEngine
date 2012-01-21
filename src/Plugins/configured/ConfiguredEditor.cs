@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using EditorEngine.Core.Editors;
 using EditorEngine.Core.Endpoints;
+using EditorEngine.Core.Messaging.Messages;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -81,6 +82,27 @@ namespace configured
             SetFocus();
         }
 
+		public void BeginBatchUpdate() {}
+		public void EndBatchUpdate() {}
+
+		public bool CanInjectFor(string file)
+		{
+			return false;
+		}
+
+		public void Inject(EditorInjectMessage message)
+		{
+		}
+
+		public bool CanRemoveFor(string file)
+		{
+			return false;
+		}
+
+		public void Remove(EditorRemoveMessage msg)
+		{
+		}
+		
         private void tryOpenConfiguration()
         {
             try

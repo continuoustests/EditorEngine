@@ -26,14 +26,22 @@ namespace EditorEngine.Core.Bootstrapping
 					{
 						new GoToHandler(_dispatcher),
 						new LoadEditorHandler(_dispatcher),
-						new SetFocusHandler(_dispatcher)
+						new SetFocusHandler(_dispatcher),
+						new InjectHandler(_dispatcher),
+						new RemoveHandler(_dispatcher),
+						new ReplaceHandler(_dispatcher),
+						new RefactorHandler(_dispatcher)
 					});
 			_dispatcher.Register<CommandMessage>(commandDispatcher);
 
-			var editorDispatcher = new EditorDispatcher(new PluginLoader(_endpoint), _dispatcher);
+			var editorDispatcher = new EditorDispatcher(new PluginLoader(_endpoint), _dispatcher, null);
 			_dispatcher.Register<EditorLoadMessage>(editorDispatcher);
 			_dispatcher.Register<EditorGoToMessage>(editorDispatcher);
 			_dispatcher.Register<EditorSetFocusMessage>(editorDispatcher);
+			_dispatcher.Register<EditorInjectMessage>(editorDispatcher);
+			_dispatcher.Register<EditorRemoveMessage>(editorDispatcher);
+			_dispatcher.Register<EditorReplaceMessage>(editorDispatcher);
+			_dispatcher.Register<EditorRefactorMessage>(editorDispatcher);
 		}
 
 		public void Register<T>(IConsumerOf<T> consumer) where T : Message

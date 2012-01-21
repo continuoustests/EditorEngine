@@ -3,6 +3,7 @@ using EditorEngine;
 using EditorEngine.Core.Editors;
 using System.Diagnostics;
 using EditorEngine.Core.Endpoints;
+using EditorEngine.Core.Messaging.Messages;
 
 namespace gedit
 {
@@ -44,7 +45,28 @@ namespace gedit
 		{
 			invoke("{0} +{1}", location.File, location.Line);
 		}
+
+		public void BeginBatchUpdate() {}
+		public void EndBatchUpdate() {}
 		
+		public bool CanInjectFor(string file)
+		{
+			return false;
+		}
+
+		public void Inject(EditorInjectMessage message)
+		{
+		}
+		
+		public bool CanRemoveFor(string file)
+		{
+			return false;
+		}
+
+		public void Remove(EditorRemoveMessage message)
+		{
+		}
+
 		private void invoke(string arguments, params object[] args)
 		{
 			var proc = new Process();

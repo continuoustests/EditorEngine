@@ -1,28 +1,70 @@
 using System;
 using System.Text;
+using System.Collections.Generic;
 namespace EditorEngine.Core.Messaging.Messages
 {
 	class CommandMessage : Message
 	{
+        private char _separator;
+        private string _word;
+
 		public string Command { get; set; }
-		public string Arguments { get; set; }
+		public List<string> Arguments = new List<string>();
 		
 		public CommandMessage(string message)
 		{
-			var chunks = message.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-			if (chunks.Length < 1)
-				throw new Exception("Invalid command " + message);
-			Command = chunks[0].Trim();
-			Arguments = concatArgumentChunks(chunks);
-		}
+            _separator = ' ';
+            _word = "";
+            for (int i = 0; i < message.Length; i++)
+                processCharacter(message[i]);
+            addWord();
+        }
+
+        private void processCharacter(char argument)
+        {
+            if (isArgumentSeparator(argument))
+                _separator = argument;
+
+            if (itTerminatesArgument(argument))
+            {
+                addWord();
+                _word = "";
+                return;
+            }
+            _word += argument.ToString();
+        }
+
+        private void addWord()
+        {
+            if (_word.Length == 0)
+				return;
+			if (Command == null)
+            	Command = _word;
+			else
+				Arguments.Add(_word);
+        }
+
+        private bool itTerminatesArgument(char argument)
+        {
+            return argumentIsTerminatedWithSpace(argument) ||
+                   argumentIsTerminatedWithQuote(argument);
+        }
+
+        private bool isArgumentSeparator(char argument)
+        {
+            return (_word.Length == 0 && argument == ' ') ||
+                   (_word.Length == 0 && argument == '"');
+        }
+
+        private bool argumentIsTerminatedWithSpace(char arguments)
+        {
+            return (arguments == ' ' && _separator == ' ');
+        }
 		
-		private string concatArgumentChunks(string[] chunks)
-		{
-			var sb = new StringBuilder();
-			for (int i = 1; i < chunks.Length; i++)
-				sb.Append(chunks[i]);
-			return sb.ToString().Trim();
-		}
+		private bool argumentIsTerminatedWithQuote(char arguments)
+        {
+            return (arguments == '"' && _separator == '"');
+        }
 	}
 }
 
