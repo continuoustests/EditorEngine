@@ -17,8 +17,8 @@ namespace EditorEngine.Core.Editors
 		void BeginBatchUpdate();
 		void EndBatchUpdate();
 
-		bool CanInjectFor(string file);
-		void Inject(EditorInjectMessage msg);
+		bool CanInsertFor(string file);
+		void Insert(EditorInsertMessage msg);
 
 		bool CanRemoveFor(string file);
 		void Remove(EditorRemoveMessage msg);

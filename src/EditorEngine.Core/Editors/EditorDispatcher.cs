@@ -15,7 +15,7 @@ namespace EditorEngine.Core.Editors
 		IConsumerOf<EditorGoToMessage>,
 		IConsumerOf<EditorLoadMessage>,
 		IConsumerOf<EditorSetFocusMessage>,
-		IConsumerOf<EditorInjectMessage>,
+		IConsumerOf<EditorInsertMessage>,
 		IConsumerOf<EditorRemoveMessage>,
 		IConsumerOf<EditorReplaceMessage>,
 		IConsumerOf<EditorRefactorMessage>
@@ -95,12 +95,12 @@ namespace EditorEngine.Core.Editors
 			editor(() => _editor.SetFocus());
 		}
 
-		public void Consume(EditorInjectMessage message)
+		public void Consume(EditorInsertMessage message)
 		{
-			if (queryEditor<bool>(() => { return _editor.CanInjectFor(message.Destination.File); }))
-				editor(() => _editor.Inject(message));
+			if (queryEditor<bool>(() => { return _editor.CanInsertFor(message.Destination.File); }))
+				editor(() => _editor.Insert(message));
 			else
-				_fileWriter.Inject(message);
+				_fileWriter.Insert(message);
 		}
 		
 		public void Consume(EditorRemoveMessage message)
@@ -118,8 +118,8 @@ namespace EditorEngine.Core.Editors
 			{
 				Message parsedMessage = null;
 				var cmd = new CommandMessage(msg);
-				if (cmd.Command == "inject")
-					parsedMessage = EditorInjectMessage.Parse(cmd.Arguments.ToArray());
+				if (cmd.Command == "insert")
+					parsedMessage = EditorInsertMessage.Parse(cmd.Arguments.ToArray());
 				else if (cmd.Command == "remove")
 					parsedMessage = EditorRemoveMessage.Parse(cmd.Arguments.ToArray());
 				else if (cmd.Command == "replace")
@@ -130,8 +130,8 @@ namespace EditorEngine.Core.Editors
 			}
 			foreach (var msg in messages)
 			{
-				if (msg.GetType() == typeof(EditorInjectMessage))
-					Consume((EditorInjectMessage)msg);
+				if (msg.GetType() == typeof(EditorInsertMessage))
+					Consume((EditorInsertMessage)msg);
 				else if (msg.GetType() == typeof(EditorRemoveMessage))
 					Consume((EditorRemoveMessage)msg);
 				else if (msg.GetType() == typeof(EditorReplaceMessage))
@@ -144,19 +144,19 @@ namespace EditorEngine.Core.Editors
 			var remove = new EditorRemoveMessage(
 						message.Start,
 						message.End);
-			var inject = new EditorInjectMessage(
+			var insert = new EditorInsertMessage(
 						message.Text,
 						message.End);
 			if (queryEditor<bool>(() => { return _editor.CanRemoveFor(message.Start.File); }) &&
-				queryEditor<bool>(() => { return _editor.CanInjectFor(message.Start.File); }))
+				queryEditor<bool>(() => { return _editor.CanInsertFor(message.Start.File); }))
 			{
 				editor(() => _editor.Remove(remove));
-				editor(() => _editor.Inject(inject));
+				editor(() => _editor.Insert(insert));
 			}
 			else
 			{
 				_fileWriter.Remove(remove);
-				_fileWriter.Inject(inject);
+				_fileWriter.Insert(insert);
 			}
 		}
 	}

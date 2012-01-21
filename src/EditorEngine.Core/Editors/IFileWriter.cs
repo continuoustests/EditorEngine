@@ -5,7 +5,7 @@ namespace EditorEngine.Core.Editors
 {
 	public interface IFileWriter
 	{
-		void Inject(EditorInjectMessage message);
+		void Insert(EditorInsertMessage message);
 		void Remove(EditorRemoveMessage msg);
 	}
 }

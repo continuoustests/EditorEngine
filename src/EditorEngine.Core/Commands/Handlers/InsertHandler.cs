@@ -5,20 +5,20 @@ using EditorEngine.Core.Arguments;
 
 namespace EditorEngine.Core.Commands.Handlers
 {
-	public class InjectHandler : ICommandHandler
+	public class InsertHandler : ICommandHandler
 	{
 		private IMessageDispatcher _dispatcher;
 
-		public string ID { get { return "inject"; } }
+		public string ID { get { return "insert"; } }
 
-		public InjectHandler(IMessageDispatcher dispatcher)
+		public InsertHandler(IMessageDispatcher dispatcher)
 		{
 			_dispatcher = dispatcher;
 		}
 
 		public void Execute(string[] argument)
 		{
-			var message = EditorInjectMessage.Parse(argument);
+			var message = EditorInsertMessage.Parse(argument);
 			if (message == null)
 				return;
 			_dispatcher.Publish(message);

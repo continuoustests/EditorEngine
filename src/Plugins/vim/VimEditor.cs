@@ -197,12 +197,12 @@ namespace vim
 			send("0:endAtomic!0");
 		}
 
-		public bool CanInjectFor(string file)
+		public bool CanInsertFor(string file)
 		{
 			return true;
 		}
 
-		public void Inject(EditorInjectMessage message)
+		public void Insert(EditorInsertMessage message)
 		{
 			GoTo(new Location(
 				message.Destination.File,

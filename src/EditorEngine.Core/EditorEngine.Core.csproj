@@ -75,9 +75,9 @@
     <Compile Include="Editors\IPluginLoader.cs" />
     <Compile Include="Commands\Handlers\SetFocusHandler.cs" />
     <Compile Include="Messaging\Messages\EditorSetFocusMessage.cs" />
-    <Compile Include="Commands\Handlers\InjectHandler.cs" />
+    <Compile Include="Commands\Handlers\InsertHandler.cs" />
     <Compile Include="Arguments\PositionArgumentParser.cs" />
-    <Compile Include="Messaging\Messages\InjectMessage.cs" />
+    <Compile Include="Messaging\Messages\InsertMessage.cs" />
     <Compile Include="Editors\IFileWriter.cs" />
     <Compile Include="Commands\Handlers\RemoveHandler.cs" />
     <Compile Include="Messaging\Messages\EditorRemoveMessage.cs" />

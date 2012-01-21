@@ -95,7 +95,7 @@ namespace vim.Tests
 		}
 
 		[Test]
-		public void When_asked_to_inject_for_a_file_it_will_accept_the_challenge()
+		public void When_asked_to_insert_for_a_file_it_will_accept_the_challenge()
 		{
 			var newline = "\\n";
 			if (Environment.OSVersion.Platform != PlatformID.Unix && 
@@ -104,8 +104,8 @@ namespace vim.Tests
 			_server.WhenPublishsing("0:getCursor/2", "2 1 2 3 7");
 			_server.WhenPublishsing("1:getText/3", "3 the" + newline + "content");
 			_server.Publish("0:fileOpened=0 \"file_to_write_to\" T F");
-			_editor.Inject(
-				new EditorInjectMessage(
+			_editor.Insert(
+				new EditorInsertMessage(
 					"text to insert",
 					new GoTo()
 						{

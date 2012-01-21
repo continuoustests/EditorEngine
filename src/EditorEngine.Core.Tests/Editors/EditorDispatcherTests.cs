@@ -64,23 +64,23 @@ namespace EditorEngine.Core.Tests.Editors
 		}
 		
 		[Test]
-		public void Should_send_injection_to_editor_if_it_can_handle_it()
+		public void Should_send_insertion_to_editor_if_it_can_handle_it()
 		{
 			_editor.Stub(x => x.IsAlive).Return(true);
-			_editor.Stub(x => x.CanInjectFor("tofile.txt")).Return(true);
-			var msg = new EditorInjectMessage("inectfile.txt", new GoTo() { File = "tofile.txt" });
+			_editor.Stub(x => x.CanInsertFor("tofile.txt")).Return(true);
+			var msg = new EditorInsertMessage("inectfile.txt", new GoTo() { File = "tofile.txt" });
 			_dispatcher.Consume(msg);
-			_editor.AssertWasCalled(method => method.Inject(msg));
+			_editor.AssertWasCalled(method => method.Insert(msg));
 		}
 		
 		[Test]
-		public void Should_send_injection_to_file_writer_if_editor_cannot_handle_it()
+		public void Should_send_insertion_to_file_writer_if_editor_cannot_handle_it()
 		{
 			_editor.Stub(x => x.IsAlive).Return(true);
-			_editor.Stub(x => x.CanInjectFor("tofile.txt")).Return(false);
-			var msg = new EditorInjectMessage("inectfile.txt", new GoTo() { File = "tofile.txt" });
+			_editor.Stub(x => x.CanInsertFor("tofile.txt")).Return(false);
+			var msg = new EditorInsertMessage("inectfile.txt", new GoTo() { File = "tofile.txt" });
 			_dispatcher.Consume(msg);
-			_fileWriter.AssertWasCalled(method => method.Inject(msg));
+			_fileWriter.AssertWasCalled(method => method.Insert(msg));
 		}
 
 		[Test]

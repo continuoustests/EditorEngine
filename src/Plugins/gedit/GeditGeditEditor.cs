@@ -49,12 +49,12 @@ namespace gedit
 		public void BeginBatchUpdate() {}
 		public void EndBatchUpdate() {}
 		
-		public bool CanInjectFor(string file)
+		public bool CanInsertFor(string file)
 		{
 			return false;
 		}
 
-		public void Inject(EditorInjectMessage message)
+		public void Insert(EditorInsertMessage message)
 		{
 		}
 		
