@@ -125,10 +125,7 @@ namespace EditorEngine.Core.Editors
 				else if (cmd.Command == "replace")
 					parsedMessage = EditorReplaceMessage.Parse(cmd.Arguments.ToArray());
 				if (parsedMessage == null)
-				{
-					Console.WriteLine("did not accept " + msg);
 					return;
-				}
 				messages.Add(parsedMessage);
 			}
 			foreach (var msg in messages)

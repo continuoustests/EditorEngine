@@ -58,7 +58,7 @@ namespace vim
 		private List<Buffer> _buffers = new List<Buffer>();
 		private int _correlationCounter = 1;
 		private List<ReplyResult> _replys = new List<ReplyResult>();
-		private bool _debug = true;
+		private bool _debug = false;
 		private string _executable = null;
 		private string _parameters = null;
 		
@@ -289,7 +289,6 @@ namespace vim
 			var lines = content.Split(new[] { newline }, StringSplitOptions.None);
 			for (int line = message.End.Line; line >= message.Start.Line; line--)
 			{
-				Console.WriteLine("doing line " + line.ToString() + " nur of lines is " + lines.Length.ToString());
 				var column = 0;
 				if (line == message.Start.Line)
 					column = message.Start.Column;
