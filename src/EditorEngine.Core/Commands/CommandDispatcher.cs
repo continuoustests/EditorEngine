@@ -21,7 +21,7 @@ namespace EditorEngine.Core.Commands
 				var handler = _handlers.FirstOrDefault(x => x.ID.Equals(message.Command));
 				if (handler == null)
 					return;
-				handler.Execute(message.Arguments.ToArray());
+				handler.Execute(message.ClientID, message.Arguments.ToArray());
 			}
 		}
 	}

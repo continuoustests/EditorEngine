@@ -8,11 +8,13 @@ namespace EditorEngine.Core.Messaging.Messages
         private char _separator;
         private string _word;
 
+		public Guid ClientID { get; private set; }
 		public string Command { get; set; }
 		public List<string> Arguments = new List<string>();
-		
-		public CommandMessage(string message)
+
+		public CommandMessage(Guid clientID, string message)
 		{
+			ClientID = clientID;
             _separator = ' ';
             _word = "";
             for (int i = 0; i < message.Length; i++)

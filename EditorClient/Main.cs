@@ -18,8 +18,16 @@ namespace EditorClient
 				return;
 			}
 			var command = string.Format("{0} {1}", arguments.Command, arguments.Parameters);
-			instance.Send(command);
-			Console.WriteLine("Sent command: {0}", command);
+			if (arguments.Request)
+			{
+				Console.WriteLine("Requested: {0}", command);
+				instance.Request(command);
+			}
+			else
+			{
+				Console.WriteLine("Sent command: {0}", command);
+				instance.Send(command);
+			}
 		}
 		
 		private static void printUsage()

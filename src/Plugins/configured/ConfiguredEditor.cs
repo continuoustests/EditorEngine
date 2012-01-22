@@ -103,6 +103,11 @@ namespace configured
 		{
 		}
 		
+		public KeyValuePair<string,string>[] GetDirtyFiles()
+		{
+			return new KeyValuePair<string,string>[] {};
+		}
+
         private void tryOpenConfiguration()
         {
             try

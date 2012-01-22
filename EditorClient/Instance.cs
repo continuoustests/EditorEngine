@@ -39,6 +39,25 @@ namespace EditorClient
 			client.SendAndWait(message);
 			client.Disconnect();
 		}
+
+		public void Request(string message)
+		{
+			var client = new Client();
+			client.Connect(Port);
+			if (!client.IsConnected)
+				return;
+			client.SendAndWait(message);
+
+			var then = DateTime.Now.AddSeconds(20);
+			while (then > DateTime.Now)
+			{
+				if (client.RecievedMessage != null)
+					break;
+			}
+			
+			Console.WriteLine(client.RecievedMessage);
+			client.Disconnect();
+		}
 	}
 }
 

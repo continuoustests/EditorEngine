@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using EditorEngine;
 using EditorEngine.Core.Editors;
 using System.Diagnostics;
@@ -65,6 +66,11 @@ namespace gedit
 
 		public void Remove(EditorRemoveMessage message)
 		{
+		}
+
+		public KeyValuePair<string,string>[] GetDirtyFiles()
+		{
+			return new KeyValuePair<string,string>[] {};
 		}
 
 		private void invoke(string arguments, params object[] args)

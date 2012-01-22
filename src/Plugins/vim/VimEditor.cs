@@ -144,6 +144,8 @@ namespace vim
 
 		void Handle_serverIncomingMessage(object sender, MessageArgs e)
 		{
+			if (_debug)
+				Console.WriteLine("Recieving: " +  e.Message);
 			if (handleReply(e.Message))
 				return;
 			if (_debug)
@@ -307,6 +309,56 @@ namespace vim
 					location.Offset,
 					length);
 			}
+		}
+
+		public KeyValuePair<string,string>[] GetDirtyFiles()
+		{
+			var modifiedCount = getModified();
+			if (modifiedCount == "0")
+				return new KeyValuePair<string,string>[] {};
+			return _buffers
+				.Where(x => !x.Closed && getModified(x.ID) == "1")
+				.Select(x => new KeyValuePair<string,string>(x.Fullpath, getText(x.ID)))
+				.ToArray();
+		}
+
+		private string getModified()
+		{
+			return getModified(0);
+		}
+
+		private string getModified(int bufferID)
+		{
+			var reply = runFunction("{0}:getModified", bufferID);
+			if (reply == null)
+				return "";
+			return reply
+				.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)[1];
+		}
+
+		private string getText()
+		{
+			return getText(0);
+		}
+
+		private string getText(int bufferID)
+		{
+			var reply = runFunction("{0}:getText", bufferID);
+			if (reply == null)
+				return "";
+			var start = reply.IndexOf(" ");
+			if (start == -1)
+				return "";
+			start += 1;
+			if (start == reply.Length)
+				return "";
+			var newline = "\\n";
+			if (Environment.OSVersion.Platform != PlatformID.Unix &&
+				Environment.OSVersion.Platform != PlatformID.MacOSX)
+				newline = "\\r\\n";
+			return reply
+				.Substring(start, reply.Length - start)
+				.Replace(newline, Environment.NewLine);
 		}
 
 		private VIMLocation getLocation()

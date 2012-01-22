@@ -15,7 +15,7 @@ namespace EditorEngine.Core.Commands.Handlers
 			_dispatcher = dispatcher;
 		}
 
-		public void Execute(string[] argument)
+		public void Execute(Guid clientID, string[] argument)
 		{
 			var message = EditorRemoveMessage.Parse(argument);
 			if (message == null)

@@ -18,7 +18,8 @@ namespace EditorEngine.Core.Editors
 		IConsumerOf<EditorInsertMessage>,
 		IConsumerOf<EditorRemoveMessage>,
 		IConsumerOf<EditorReplaceMessage>,
-		IConsumerOf<EditorRefactorMessage>
+		IConsumerOf<EditorRefactorMessage>,
+		IConsumerOf<EditorGetDirtyFilesMessage>
 	{
 		private object _padlock = new object();
 		private IEditor _editor = null;
@@ -117,7 +118,7 @@ namespace EditorEngine.Core.Editors
 			foreach (var msg in message.Lines)
 			{
 				Message parsedMessage = null;
-				var cmd = new CommandMessage(msg);
+				var cmd = new CommandMessage(Guid.Empty, msg);
 				if (cmd.Command == "insert")
 					parsedMessage = EditorInsertMessage.Parse(cmd.Arguments.ToArray());
 				else if (cmd.Command == "remove")
@@ -158,6 +159,14 @@ namespace EditorEngine.Core.Editors
 				_fileWriter.Remove(remove);
 				_fileWriter.Insert(insert);
 			}
+		}
+
+		public void Consume(EditorGetDirtyFilesMessage message)
+		{
+			_dispatcher.Publish(
+				new EditorDirtyFilesListMessage(
+					message.ClientID,
+					_editor.GetDirtyFiles()));
 		}
 	}
 }

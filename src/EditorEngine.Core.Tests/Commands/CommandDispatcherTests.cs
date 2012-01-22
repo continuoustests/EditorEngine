@@ -20,7 +20,7 @@ namespace EditorEngine.Core.Tests.Commands
 		[Test]
 		public void Should_run_command_handler_when_consuming_command_message()
 		{
-			var message = new CommandMessage("MyCommand some arguments");
+			var message = new CommandMessage(Guid.Empty, "MyCommand some arguments");
 			_dispatcher.Consume(message);
 			Assert.That(_command.PassedArguments.Length, Is.EqualTo(2));
 			Assert.That(_command.PassedArguments[0], Is.EqualTo("some"));
@@ -34,7 +34,7 @@ namespace EditorEngine.Core.Tests.Commands
 		
 		public string ID { get { return "MyCommand"; } }
 		
-		public void Execute(string[] arguments)
+		public void Execute(Guid clientID, string[] arguments)
 		{
 			PassedArguments = arguments;
 		}

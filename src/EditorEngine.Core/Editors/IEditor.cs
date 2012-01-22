@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using EditorEngine.Core.Endpoints;
 using EditorEngine.Core.Messaging.Messages;
@@ -22,6 +23,8 @@ namespace EditorEngine.Core.Editors
 
 		bool CanRemoveFor(string file);
 		void Remove(EditorRemoveMessage msg);
+
+		KeyValuePair<string,string>[] GetDirtyFiles();
 	}
 }
 

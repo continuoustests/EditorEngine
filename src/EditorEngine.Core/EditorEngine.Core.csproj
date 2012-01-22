@@ -85,6 +85,9 @@
     <Compile Include="Messaging\Messages\EditorReplaceMessage.cs" />
     <Compile Include="Commands\Handlers\RefactorHandler.cs" />
     <Compile Include="Messaging\Messages\EditorRefactorMessage.cs" />
+    <Compile Include="Commands\Handlers\GetDirtyFilesHandler.cs" />
+    <Compile Include="Messaging\Messages\EditorGetDirtyFilesMessage.cs" />
+    <Compile Include="Messaging\Messages\EditorDirtyFilesListMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

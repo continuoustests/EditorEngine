@@ -23,13 +23,20 @@ namespace EditorEngine.Core.Endpoints
 
 		void Handle_serverIncomingMessage (object sender, MessageArgs e)
 		{
-			_dispatcher.Publish(new CommandMessage(e.Message));
-			_server.Send(e.Message); // Pass on to all consuming clients
+			_dispatcher.Publish(new CommandMessage(e.ClientID, e.Message));
+			// TODO fix this.. should not pass on any query handler command
+			if (e.Message.Trim() != "get-dirty-files")
+				_server.Send(e.Message); // Pass on to all consuming clients
 		}
 		
 		public void Run(string cmd)
 		{
 			_server.Send(cmd);
+		}
+		
+		public void Run(Guid clientID, string cmd)
+		{
+			_server.Send(cmd, clientID);
 		}
 		
 		public void Start(string key)

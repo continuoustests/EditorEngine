@@ -149,6 +149,34 @@ namespace vim.Tests
 			_server.Sent("1:remove/0 15 7");
 			_server.Sent("1:remove/0 25 6");
 		}
+
+		[Test]
+		public void When_getting_dirty_files_an_no_files_are_dirty_return_empty_list()
+		{
+			_server.WhenPublishsing("0:getModified/1", "1 0");
+			Assert.That(_editor.GetDirtyFiles().Length, Is.EqualTo(0));
+		}
+
+		[Test]
+		public void When_getting_dirty_files_and_files_are_dirty_it_will_reply_with_them()
+		{
+			_server.Publish("0:fileOpened=0 \"file1\" T F");
+			_server.Publish("0:fileOpened=0 \"file2\" T F");
+			_server.Publish("0:fileOpened=0 \"file3\" T F");
+			_server.WhenPublishsing("0:getModified/2", "2 2");
+			_server.WhenPublishsing("1:getModified/3", "3 1");
+			_server.WhenPublishsing("2:getModified/5", "5 0");
+			_server.WhenPublishsing("3:getModified/6", "6 1");
+			_server.WhenPublishsing("1:getText/4", "4 This");
+			_server.WhenPublishsing("3:getText/7", "7 the answer");
+			var files = _editor.GetDirtyFiles();
+			//throw new Exception(_server.Messages);
+			Assert.That(files.Length, Is.EqualTo(2));
+			Assert.That(files[0].Key, Is.EqualTo("file1"));
+			Assert.That(files[0].Value, Is.EqualTo("This"));
+			Assert.That(files[1].Key, Is.EqualTo("file3"));
+			Assert.That(files[1].Value, Is.EqualTo("the answer"));
+		}
 	}
 	
 	class Fake_TcpServer : ITcpServer
@@ -189,10 +217,15 @@ namespace vim.Tests
 				Publish(query.Value);
 		}
 		
+		public void Send(string message, Guid client)
+		{
+			Send(message);
+		}
+
 		public void Publish(string message)
 		{
 			if (IncomingMessage != null)
-				IncomingMessage(this, new MessageArgs(message));
+				IncomingMessage(this, new MessageArgs(Guid.Empty, message));
 		}
 		
 		public void Sent(string message)
@@ -210,6 +243,10 @@ namespace vim.Tests
 			_cmds.Add(cmd);
 		}
 		
+		public void Run(Guid clientID, string cmd)
+		{
+			_cmds.Add(cmd);
+		}
 		public void Ran(string cmd)
 		{
 			Assert.That(_cmds.Exists(x => x.Equals(cmd)), Is.True);
