@@ -34,9 +34,9 @@ namespace EditorEngine.Core.Tests.Commands
 		
 		public string ID { get { return "MyCommand"; } }
 		
-		public void Execute(Guid clientID, string[] arguments)
+		public void Execute(CommandMessage message)
 		{
-			PassedArguments = arguments;
+			PassedArguments = message.Arguments.ToArray();
 		}
 	}
 }

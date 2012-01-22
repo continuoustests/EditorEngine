@@ -33,7 +33,7 @@ namespace EditorClient
 		public void Send(string message)
 		{
 			var client = new Client();
-			client.Connect(Port);
+			client.Connect(Port, (s) => {});
 			if (!client.IsConnected)
 				return;
 			client.SendAndWait(message);
@@ -43,19 +43,12 @@ namespace EditorClient
 		public void Request(string message)
 		{
 			var client = new Client();
-			client.Connect(Port);
+			client.Connect(Port, (s) => {});
 			if (!client.IsConnected)
 				return;
-			client.SendAndWait(message);
-
-			var then = DateTime.Now.AddSeconds(20);
-			while (then > DateTime.Now)
-			{
-				if (client.RecievedMessage != null)
-					break;
-			}
-			
-			Console.WriteLine(client.RecievedMessage);
+			var reply = client.Request(message);
+			if (reply != null)
+				Console.WriteLine(reply);
 			client.Disconnect();
 		}
 	}

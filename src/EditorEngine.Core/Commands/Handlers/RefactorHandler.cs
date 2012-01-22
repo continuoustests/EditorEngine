@@ -16,9 +16,10 @@ namespace EditorEngine.Core.Commands.Handlers
 			_dispatcher = dispatcher;
 		}
 
-		public void Execute(Guid clientID, string[] argument)
+		public void Execute(CommandMessage message)
 		{
-			if (argument.Length != 1)
+			var argument = message.Arguments;
+			if (argument.Count != 1)
 				return;
 			if (!File.Exists(argument[0]))
 				return;

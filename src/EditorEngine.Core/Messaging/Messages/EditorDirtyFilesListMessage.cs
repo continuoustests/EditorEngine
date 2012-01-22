@@ -8,18 +8,19 @@ namespace EditorEngine.Core.Messaging.Messages
 {
 	public class EditorDirtyFilesListMessage : Message
 	{
-		public Guid ClientID { get; private set; }
+		public CommandMessage Message { get; private set; }
 		public KeyValuePair<string,string>[] DirtyFiles { get; private set; }
 
-		public EditorDirtyFilesListMessage(Guid clientID, KeyValuePair<string,string>[] files)
+		public EditorDirtyFilesListMessage(CommandMessage message, KeyValuePair<string,string>[] files)
 		{
-			ClientID = clientID;
+			Message = message;
 			DirtyFiles = files;
 		}
 
 		public string GetCommand()
 		{
 			var sb = new StringBuilder();
+			sb.Append(Message.CorrelationID);
 			DirtyFiles.ToList()
 				.ForEach(x =>
 					{

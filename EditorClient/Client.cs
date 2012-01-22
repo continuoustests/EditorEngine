@@ -15,8 +15,10 @@ namespace EditorClient
         private readonly MemoryStream _readBuffer = new MemoryStream();
         private Queue queue = new Queue();
 		private bool IsSending = false;
+		private Action<string> _onMessage;
+		class MessageArgs : EventArgs { public string Message { get; set; } }
+		private event EventHandler<MessageArgs> _messageReceived;
 		
-		public string RecievedMessage { get; private set; }
 		public bool IsConnected { get; private set; }
 		
 		public Client()
@@ -24,8 +26,9 @@ namespace EditorClient
 			IsConnected = false;
 		}
 
-        public void Connect(int port)
+        public void Connect(int port, Action<string> onMessage)
         {
+			_onMessage = onMessage;
             Connect(port, 0);
         }
 
@@ -79,7 +82,9 @@ namespace EditorClient
                     {
                         var data = _readBuffer.ToArray();
                         var actual = Encoding.UTF8.GetString(data, 0, data.Length);
-                        RecievedMessage = actual;
+						if (_messageReceived != null)
+							_messageReceived(this, new MessageArgs() { Message = actual });
+                        _onMessage(actual);
                         _readBuffer.SetLength(0);
                     }
                     else
@@ -118,6 +123,31 @@ namespace EditorClient
             while (IsSending && DateTime.Now.Subtract(timeout).TotalMilliseconds < 8000)
                 Thread.Sleep(10);
         }
+
+		public string Request(string message)
+		{
+			string recieved= null;
+			var correlationID = "correlationID=" + Guid.NewGuid().ToString() + "|";
+			var messageToSend = correlationID + message;
+			EventHandler<MessageArgs> msgHandler = (o,a) => {
+					if (a.Message.StartsWith(correlationID) && a.Message != messageToSend)
+						recieved = a.Message
+							.Substring(
+								correlationID.Length,
+								a.Message.Length - correlationID.Length);
+				};
+			_messageReceived += msgHandler;
+			Send(messageToSend);
+			var timeout = DateTime.Now;
+            while (DateTime.Now.Subtract(timeout).TotalMilliseconds < 8000)
+			{
+				if (recieved != null)
+					break;
+                Thread.Sleep(10);
+			}
+			_messageReceived -= msgHandler;
+			return recieved;
+		}
 
         private void WriteCompleted(IAsyncResult result)
         {

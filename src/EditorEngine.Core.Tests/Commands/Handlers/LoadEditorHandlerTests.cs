@@ -21,23 +21,28 @@ namespace EditorEngine.Core.Tests.Commands.Handlers
 		[Test]
 		public void When_not_supplying_an_argument_it_should_publish_usage_message()
 		{
-			_handler.Execute(Guid.Empty, new string[] {});
+			_handler.Execute(msg(""));
 			_dispatcher.Published<UsageErrorMessage>();
 		}
 		
 		[Test]
 		public void When_supplying_to_many_arguments_it_should_publish_usage_message()
 		{
-			_handler.Execute(Guid.Empty, new[] {"1", "2"});
+			_handler.Execute(msg("1 2"));
 			_dispatcher.Published<UsageErrorMessage>();
 		}
 		
 		[Test]
 		public void When_supplying_an_editor_it_should_publish_an_editor_load_message()
 		{
-			_handler.Execute(Guid.Empty, new[] {"vi"});
+			_handler.Execute(msg("vi"));
 			var message = _dispatcher.GetPublishedMessage<EditorLoadMessage>();
 			Assert.That(message.Editor, Is.EqualTo("vi"));
+		}
+		
+		private CommandMessage msg(string args)
+		{
+			return new CommandMessage(Guid.Empty, "editor " + args);
 		}
 	}
 }

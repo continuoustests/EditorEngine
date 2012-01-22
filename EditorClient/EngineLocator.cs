@@ -31,7 +31,7 @@ namespace EditorClient
 		private bool canConnectTo(Instance info)
 		{
 			var client = new Client();
-			client.Connect(info.Port);
+			client.Connect(info.Port, (s) => {});
 			var connected = client.IsConnected;
 			client.Disconnect();
 			if (!connected)

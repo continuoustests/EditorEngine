@@ -14,7 +14,7 @@ namespace EditorEngine.Core.Commands.Handlers
 			_dispatcher = dispatcher;
 		}
 				
-		public void Execute(Guid clientID, string[] arguments)
+		public void Execute(CommandMessage message)
 		{
 			_dispatcher.Publish(new EditorSetFocusMessage());
 		}

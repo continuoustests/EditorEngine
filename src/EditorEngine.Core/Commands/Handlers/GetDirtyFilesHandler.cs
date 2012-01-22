@@ -20,14 +20,18 @@ namespace EditorEngine.Core.Commands.Handlers
 			_endpoint = endpoint;
 		}
 
-		public void Execute(Guid clientID, string[] argument)
+		public void Execute(CommandMessage message)
 		{
-			_dispatcher.Publish(new EditorGetDirtyFilesMessage(clientID));
+			_dispatcher.Publish(
+				new EditorGetDirtyFilesMessage(
+					message));
 		}
 
 		public void Consume(EditorDirtyFilesListMessage message)
 		{
-			_endpoint.Run(message.ClientID, message.GetCommand());
+			_endpoint.Run(
+				message.Message.ClientID,
+				message.GetCommand());
 		}
 	}
 }

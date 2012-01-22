@@ -17,9 +17,10 @@ namespace EditorEngine.Core.Commands.Handlers
 			_dispatcher = dispatcher;
 		}
 		
-		public void Execute(Guid clientID, string[] arguments)
+		public void Execute(CommandMessage message)
 		{
-			if (arguments.Length != 1)
+			var arguments = message.Arguments;
+			if (arguments.Count != 1)
 			{
 				_dispatcher.Publish(
 					new UsageErrorMessage(string.Format("Invalid number of arguments. {0}", getUsage())));

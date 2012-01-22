@@ -19,9 +19,10 @@ namespace EditorEngine.Core.Commands.Handlers
 			_dispatcher = dispatcher;
 		}
 		
-		public void Execute(Guid clientID, string[] arguments)
+		public void Execute(CommandMessage message)
 		{
-			if (arguments.Length != 1)
+			var arguments = message.Arguments;
+			if (arguments.Count != 1)
 			{
 				invalidArgs();
 				return;

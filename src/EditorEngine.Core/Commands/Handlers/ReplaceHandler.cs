@@ -15,8 +15,9 @@ namespace EditorEngine.Core.Commands.Handlers
 			_dispatcher = dispatcher;
 		}
 
-		public void Execute(Guid clientID, string[] argument)
+		public void Execute(CommandMessage msg)
 		{
+			var argument = msg.Arguments.ToArray();
 			var message = EditorReplaceMessage.Parse(argument);
 			if (message == null)
 				return;

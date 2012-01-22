@@ -3,17 +3,29 @@ using System.Text;
 using System.Collections.Generic;
 namespace EditorEngine.Core.Messaging.Messages
 {
-	class CommandMessage : Message
+	public class CommandMessage : Message
 	{
         private char _separator;
         private string _word;
 
 		public Guid ClientID { get; private set; }
+		public string CorrelationID { get; private set; }
 		public string Command { get; set; }
 		public List<string> Arguments = new List<string>();
 
 		public CommandMessage(Guid clientID, string message)
 		{
+			if (message.StartsWith("correlationID=") &&
+				message.IndexOf("|") != -1)
+			{
+				CorrelationID =
+					message.Substring(
+						0,
+						message.IndexOf("|") + 1);
+				message = message.Substring(
+					CorrelationID.Length,
+					message.Length - CorrelationID.Length);
+			}
 			ClientID = clientID;
             _separator = ' ';
             _word = "";

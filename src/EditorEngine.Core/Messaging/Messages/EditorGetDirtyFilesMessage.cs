@@ -4,11 +4,11 @@ namespace EditorEngine.Core.Messaging.Messages
 {
 	public class EditorGetDirtyFilesMessage : Message
 	{
-		public Guid ClientID { get; private set; }
+		public CommandMessage Message { get; private set; }
 
-		public EditorGetDirtyFilesMessage(Guid clientID)
+		public EditorGetDirtyFilesMessage(CommandMessage message)
 		{
-			ClientID = clientID;
+			Message = message;
 		}
 	}
 }

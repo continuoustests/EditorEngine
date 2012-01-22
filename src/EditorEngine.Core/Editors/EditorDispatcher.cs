@@ -165,7 +165,7 @@ namespace EditorEngine.Core.Editors
 		{
 			_dispatcher.Publish(
 				new EditorDirtyFilesListMessage(
-					message.ClientID,
+					message.Message,
 					_editor.GetDirtyFiles()));
 		}
 	}
