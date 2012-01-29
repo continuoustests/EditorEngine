@@ -1,4 +1,5 @@
 using System;
+using EditorEngine.Core.CommandBuilding;
 namespace EditorEngine.Core.Editors
 {
 	public class Location
@@ -12,6 +13,15 @@ namespace EditorEngine.Core.Editors
 			File = file;
 			Line = line;
 			Column = column;
+		}
+		
+		public void Add(Position position)
+		{
+			Line += position.Line;
+			if (position.Line > 0)
+				Column = position.Column;
+			else
+				Column += position.Column;
 		}
 	}
 }

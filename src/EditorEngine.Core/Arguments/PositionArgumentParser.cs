@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using EditorEngine.Core.CommandBuilding;
 
 namespace EditorEngine.Core.Arguments
 {
@@ -8,6 +9,15 @@ namespace EditorEngine.Core.Arguments
 		public string File { get; set; }
 		public int Line { get; set; }
 		public int Column { get; set; }
+
+		public void Add(Position position)
+		{
+			Line += position.Line;
+			if (position.Line > 0)
+				Column = position.Column;
+			else
+				Column += position.Column;
+		}
 	}
 
 	public class PositionArgumentParser

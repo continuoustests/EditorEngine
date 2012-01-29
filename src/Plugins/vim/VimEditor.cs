@@ -273,10 +273,22 @@ namespace vim
 				location.Buffer.ID,
 				location.Offset - location.Column,
 				lineModified);
-			GoTo(new Location(
-				message.Destination.File,
-				message.Destination.Line,
-				message.Destination.Column + message.Text.Length - 1));
+			if (message.MoveOffset != null)
+			{
+				var offsetLocation = new Location(
+					message.Destination.File,
+					message.Destination.Line,
+					message.Destination.Column);
+				offsetLocation.Add(message.MoveOffset);
+				GoTo(offsetLocation);
+			}
+			else
+			{
+				GoTo(new Location(
+					message.Destination.File,
+					message.Destination.Line,
+					message.Destination.Column + message.Text.Length - 1));
+			}
 		}	
 
 		public bool CanRemoveFor(string file)

@@ -112,11 +112,12 @@ namespace vim.Tests
 							File = "file_to_write_to",
 							Line = 2,
 							Column = 3
-						}));
+						},
+					null));
 			_server.Sent("1:setDot!0 2/2");
 			_server.Sent("0:getCursor/2");
 			_server.Sent("1:remove/0 4 " + (6 + newline.Length).ToString());
-			_server.Sent("1:insert/0 4 \"context to inserttent\"");
+			_server.Sent("1:insert/0 4 \"cotext to insertntent\"");
 		}
 		
 		[Test]

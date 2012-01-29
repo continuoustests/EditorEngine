@@ -88,6 +88,7 @@
     <Compile Include="Commands\Handlers\GetDirtyFilesHandler.cs" />
     <Compile Include="Messaging\Messages\EditorGetDirtyFilesMessage.cs" />
     <Compile Include="Messaging\Messages\EditorDirtyFilesListMessage.cs" />
+    <Compile Include="CommandBuilding\Position.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

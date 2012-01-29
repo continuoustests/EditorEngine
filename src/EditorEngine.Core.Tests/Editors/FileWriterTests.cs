@@ -41,7 +41,8 @@ namespace EditorEngine.Core.Tests.Editors
 						File = _file,
 						Line = 2,
 						Column = 17
-					});
+					},
+				null);
 			_writer.Insert(message);
 			Assert.That(
 				File.ReadAllText(_file),
@@ -62,7 +63,8 @@ namespace EditorEngine.Core.Tests.Editors
 						File = _file,
 						Line = 4,
 						Column = 17
-					});
+					},
+				null);
 			_writer.Insert(message);
 			Assert.That(
 				File.ReadAllText(_file),
