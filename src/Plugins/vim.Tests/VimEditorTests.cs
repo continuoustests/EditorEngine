@@ -22,7 +22,7 @@ namespace vim.Tests
 		{
 			_server = new Fake_TcpServer();
 			_endpoint = new Fake_CommandEndpoint();
-			_editor = new VimEditor();
+			_editor = new VimEditor().TimeoutAfter(0);
 			_editor.Publisher = _endpoint;
 			_editor.Server = _server;
 		}
@@ -113,9 +113,9 @@ namespace vim.Tests
 							Line = 2,
 							Column = 3
 						}));
-			_server.Sent("1:setDot!0 2/3");
+			_server.Sent("1:setDot!0 2/2");
 			_server.Sent("0:getCursor/2");
-			_server.Sent("1:remove/0 4 " + (7 + newline.Length).ToString());
+			_server.Sent("1:remove/0 4 " + (6 + newline.Length).ToString());
 			_server.Sent("1:insert/0 4 \"context to inserttent\"");
 		}
 		
@@ -176,6 +176,63 @@ namespace vim.Tests
 			Assert.That(files[0].Value, Is.EqualTo("This"));
 			Assert.That(files[1].Key, Is.EqualTo("file3"));
 			Assert.That(files[1].Value, Is.EqualTo("the answer"));
+		}
+		
+		[Test]
+		public void When_completing_snippet_it_will_pass_on_message()
+		{
+			var newline = "\\n";
+			if (Environment.OSVersion.Platform != PlatformID.Unix && 
+				Environment.OSVersion.Platform != PlatformID.MacOSX)
+				newline = "\\r\\n";
+			_server.WhenPublishsing("0:getCursor/2", "2 1 2 3 7");
+			_server.WhenPublishsing("1:getText/3", "3 the" + newline + "content");
+			_server.Publish("0:fileOpened=0 \"file_to_write_to\" T F");
+			_server.Publish("0:keyAtPos=0 \"snippet-complete\"");
+			Thread.Sleep(800);
+			_server.Sent("0:getCursor/2");
+			_endpoint.Ran("keypress snippet-complete \"\" \"content\" \"file_to_write_to|2|1\" \"\"");
+		}
+	}
+
+	[TestFixture]
+	public class WordTests
+	{
+		[Test]
+		public void When_given_a_single_word_sentence_it_will_return_the_word() {
+			assertThat("word", 2, "word", 1);
+		}
+		
+		[Test]
+		public void When_given_a_single_word_sentence_with_cursor_at_start_it_will_return_the_word() {
+			assertThat("\tword", 1, "word", 1);
+		}
+		
+		[Test]
+		public void When_given_a_sentence_with_multiple_words_it_will_return_the_selected_word() {
+			assertThat("some word in between", 8, "word", 6);
+		}
+
+		[Test]
+		public void When_starts_with_word__returns_first_word() {
+			assertThat("some word in between", 3, "some", 1);
+		}
+
+		[Test]
+		public void When_starts_with_word_and_is_positioned_first_returns_first_word() {
+			assertThat("some word in between", 1, "some", 1);
+		}
+		
+		[Test]
+		public void When_ends_with_word_returns_last_word() {
+			assertThat("some word in between", 21, "between", 14);
+		}
+
+		private void assertThat(string content, int position, string resultword, int column)
+		{
+			var word = Word.Extract(content, position);
+			Assert.That(word.Content, Is.EqualTo(resultword));
+			Assert.That(word.Column, Is.EqualTo(column));
 		}
 	}
 	
@@ -238,6 +295,14 @@ namespace vim.Tests
 	{
 		private List<string> _cmds = new List<string>();
 		
+		public string Messages {
+			get {
+				var text = "";
+				_cmds.ForEach(x => text += x + Environment.NewLine);
+				return text;
+			}
+		}
+
 		public void Run (string cmd)
 		{
 			_cmds.Add(cmd);

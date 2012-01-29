@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using EditorEngine.Core.Editors;
 using System.Diagnostics;
 using System.IO;
@@ -61,6 +62,7 @@ namespace vim
 		private bool _debug = false;
 		private string _executable = null;
 		private string _parameters = null;
+		private int _functrionTimeout = 2000;
 		
 		public ITcpServer Server
 		{ 
@@ -75,6 +77,12 @@ namespace vim
 		public List<Buffer> Buffers { get { return _buffers; } }
 		
 		public ICommandEndpoint Publisher { private get; set; }
+
+		public VimEditor TimeoutAfter(int milliseconds)
+		{
+			_functrionTimeout = milliseconds;
+			return this;
+		}
 		
 		public bool IsAlive
 		{
@@ -152,12 +160,22 @@ namespace vim
 				Console.WriteLine("Recieving: " +  e.Message);
 			if (getCommand(e.Message).StartsWith("keyAtPos=0 \"j\""))
 				Publisher.Run("keypress ctrl+shift+j");
+			if (getCommand(e.Message).StartsWith("keyAtPos=0 \"snippet-complete\""))
+				ThreadPool.QueueUserWorkItem(completeSnippet);
 			else if (getCommand(e.Message).StartsWith("keyAtPos=0 \""))
-				Publisher.Run("keypress " + getCommand(e.Message).Substring(12, getCommand(e.Message).IndexOf("\"", 12) - 12));
-			else if (e.Message.StartsWith("0:fileOpened=0") && e.Message.Substring(e.Message.IndexOf("\""), e.Message.LastIndexOf("\"") - e.Message.IndexOf("\"")).Replace("\"", "").Trim() == "")
+				Publisher.Run("keypress " + getCommand(e.Message)
+					.Substring(12, getCommand(e.Message).LastIndexOf("\"") - 12));
+			else if (e.Message.StartsWith("0:fileOpened=0") &&
+					 e.Message.Substring(
+					 	e.Message.IndexOf("\""), e.Message.LastIndexOf("\"") - e.Message.IndexOf("\""))
+					 	.Replace("\"", "").Trim() == "")
 				Publisher.Run("keypress nobuffers");
 			else if (e.Message.StartsWith("0:fileOpened=0"))
-				applyBufferID(e.Message.Substring(e.Message.IndexOf("\""), e.Message.LastIndexOf("\"") - e.Message.IndexOf("\"")).Replace("\"", "").Trim(), true);
+				applyBufferID(
+					e.Message.Substring(
+						e.Message.IndexOf("\""),
+						e.Message.LastIndexOf("\"") - e.Message.IndexOf("\"")).Replace("\"", "")
+						.Trim(), true);
 			else if (getCommand(e.Message).StartsWith("killed"))
 				removeBuffer(getBuffer(e.Message));
 		}
@@ -209,7 +227,7 @@ namespace vim
 			GoTo(new Location(
 				message.Destination.File,
 				message.Destination.Line,
-				message.Destination.Column));
+				message.Destination.Column - 1));
 			var location = getLocation();
 			if (location == null)
 				return;
@@ -238,10 +256,11 @@ namespace vim
 						line);
 				return;
 			}
+			var insertColumn = location.Column + ((message.Destination.Column - 1) - location.Column);
 			var lineModified =
-				line.Substring(0, location.Column) +
+				line.Substring(0, insertColumn) +
 				message.Text.Replace(Environment.NewLine, newline) +
-				line.Substring(location.Column, line.Length - location.Column);
+				line.Substring(insertColumn, line.Length - insertColumn);
 			var length = line.Length;
 			var lastLine = location.Line != lines.Length - 1;
 			if (lastLine)
@@ -249,11 +268,15 @@ namespace vim
 			send("{0}:remove/0 {1} {2}",
 				location.Buffer.ID,
 				location.Offset - location.Column,
-				length);
+				length - 1);
 			send("{0}:insert/0 {1} \"{2}\"",
 				location.Buffer.ID,
 				location.Offset - location.Column,
 				lineModified);
+			GoTo(new Location(
+				message.Destination.File,
+				message.Destination.Line,
+				message.Destination.Column + message.Text.Length - 1));
 		}	
 
 		public bool CanRemoveFor(string file)
@@ -263,6 +286,8 @@ namespace vim
 
 		public void Remove(EditorRemoveMessage message)
 		{
+			if (_debug)
+				Console.WriteLine("Removing chunk for " + message.Start.File);
 			if (message.Start.Line > message.End.Line)
 				return;
 			GoTo(new Location(
@@ -270,6 +295,8 @@ namespace vim
 				message.Start.Line,
 				message.Start.Column));
 			var location = getLocation();
+			if (location == null)
+				return;
 			if (message.Start.Line == message.End.Line)
 			{
 				if (message.Start.Column >= message.End.Column)
@@ -320,6 +347,64 @@ namespace vim
 				.Where(x => !x.Closed && getModified(x.ID) == "1")
 				.Select(x => new KeyValuePair<string,string>(x.Fullpath, getText(x.ID)))
 				.ToArray();
+		}
+
+		private void completeSnippet(object status)
+		{
+			var location = getLocation();
+			var content = runFunction("{0}:getText", location.Buffer.ID);
+			if (content == null)
+				return;
+			var newline = "\\n";
+			if (Environment.OSVersion.Platform != PlatformID.Unix &&
+				Environment.OSVersion.Platform != PlatformID.MacOSX)
+				newline = "\\r\\n";
+			var lines = content.Split(new[] { newline }, StringSplitOptions.None);
+			var line = lines[location.Line - 1];
+			var insertColumn = location.Column + 1; // Add one since command mode jumps one back
+			var word = Word.Extract(line, insertColumn); 
+			Remove(
+				new EditorRemoveMessage(
+					new EditorEngine.Core.Arguments.GoTo()
+						{
+							File = location.Buffer.Fullpath,
+							Line = location.Line,
+							Column = word.Column - 1
+						},
+					new EditorEngine.Core.Arguments.GoTo()
+						{
+							File = location.Buffer.Fullpath,
+							Line = location.Line,
+							Column = (word.Column - 1) + word.Content.Length
+						}));
+			var whitespaces = getWhitespacePrefix(line);
+			var snippetStartColumn = word.Column;
+			var message = 
+				string.Format("keypress snippet-complete \"{0}\" \"{1}\" \"{2}|{3}|{4}\" \"{5}\"",
+					Path.GetExtension(location.Buffer.Fullpath),
+					word.Content,
+					location.Buffer.Fullpath,
+					location.Line,
+					snippetStartColumn,
+					whitespaces);
+			if (_debug)
+				Console.WriteLine(message);
+			Publisher.Run(message);
+		}
+
+		private string getWhitespacePrefix(string line)
+		{
+			var sb = new StringBuilder();
+			foreach (var chr in line)
+			{
+				if (chr == ' ')
+					sb.Append("s");
+				else if (chr == '\t')
+					sb.Append("t");
+				else
+					break;
+			}
+			return sb.ToString();
 		}
 
 		private string getModified()
@@ -485,13 +570,15 @@ namespace vim
 				_replys.Add(reply);
 			}
 			send(function + "/" + reply.CorrelationID.ToString());
-			var timeout = DateTime.Now.AddSeconds(10);
+			var timeout = DateTime.Now.AddMilliseconds(_functrionTimeout);
 			while (timeout > DateTime.Now && reply.Reply == null)
 				Thread.Sleep(50);
 			lock (_replys)
 			{
 				_replys.Remove(reply);
 			}
+			if (_debug && reply.Reply == null)
+				Console.WriteLine("Function ({0}) timed out", function);
 			return reply.Reply;
 		}
 		
@@ -539,6 +626,51 @@ namespace vim
 		public void SetReply(string reply)
 		{
 			Reply = reply;
+		}
+	}
+
+	public class Word
+	{
+		public static Word Extract(string line, int position)
+		{
+			return new Word(line, position);
+		}
+
+		private string _line;
+		private int _position;
+		
+		public string Content { get; private set; }
+		public int Column { get; private set; }
+
+		public Word(string line, int position)
+		{
+			_line = line;
+			if (position != 0)
+				_position = position - 1;
+			var start = getStart();
+			var end = getEnd();
+			Content = _line.Substring(start, end - start);
+			Column = start + 1;
+		}
+
+		private int getStart()
+		{
+			var separators = new List<int>();
+			separators.Add(_line.LastIndexOf(" ", _position));
+			separators.Add(_line.LastIndexOf("\t", _position));
+			if (separators.Max(x => x) == -1)
+				return 0;
+			return separators.Max(x => x) + 1;
+		}
+
+		private int getEnd()
+		{
+			var separators = new List<int>();
+			separators.Add(_line.IndexOf(" ", _position));
+			separators.Add(_line.IndexOf("\t", _position));
+			if (separators.Max(x => x) == -1)
+				return _line.Length;
+			return separators.Max(x => x);
 		}
 	}
 }
