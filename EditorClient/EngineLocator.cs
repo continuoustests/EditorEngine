@@ -9,9 +9,18 @@ namespace EditorClient
 		public Instance GetInstance(string path)
 		{
 			var instances = getInstances(path);
-			return instances.Where(x => path.StartsWith(x.Key) && canConnectTo(x))
+			return instances.Where(x => isInstance(path, x.Key) && canConnectTo(x))
 				.OrderByDescending(x => x.Key.Length)
 				.FirstOrDefault();
+		}
+
+		private bool isInstance(string path, string key)
+		{
+			if (Environment.OSVersion.Platform == PlatformID.Unix ||
+				Environment.OSVersion.Platform == PlatformID.MacOSX)
+				return path.StartsWith(key);
+			else
+				return path.ToLower().StartsWith(key.ToLower());
 		}
 		
 		private IEnumerable<Instance> getInstances(string path)
