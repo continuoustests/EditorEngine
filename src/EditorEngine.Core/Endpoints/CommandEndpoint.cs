@@ -47,6 +47,7 @@ namespace EditorEngine.Core.Endpoints
 		
 		public void Stop()
 		{
+			_server.Send("shutdown");
 			if (File.Exists(_instanceFile))
 				File.Delete(_instanceFile);
 		}
