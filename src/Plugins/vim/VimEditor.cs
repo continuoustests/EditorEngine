@@ -7,6 +7,7 @@ using System.IO;
 using EditorEngine.Core.Endpoints.Tcp;
 using System.Threading;
 using EditorEngine.Core.Endpoints;
+using EditorEngine.Core.Logging;
 using EditorEngine.Core.Messaging.Messages;
 using System.Collections.Generic;
 using System.Reflection;
@@ -59,7 +60,6 @@ namespace vim
 		private List<Buffer> _buffers = new List<Buffer>();
 		private int _correlationCounter = 1;
 		private List<ReplyResult> _replys = new List<ReplyResult>();
-		private bool _debug = false;
 		private string _executable = null;
 		private string _parameters = null;
 		private int _functrionTimeout = 2000;
@@ -101,8 +101,7 @@ namespace vim
 			_server.IncomingMessage += Handle_serverIncomingMessage;
 			_server.ClientConnected += Handle_serverClientConnected;
 			_server.Start();
-			if (_debug)
-				Console.WriteLine("Server started and running on port {0}", _server.Port);
+			Logger.Write("Server started and running on port {0}", _server.Port);
 			_executable = getExecutable();
 			_parameters = getParameters();
 			if (_process != null)
@@ -152,12 +151,10 @@ namespace vim
 
 		void Handle_serverIncomingMessage(object sender, MessageArgs e)
 		{
-			if (_debug)
-				Console.WriteLine("Recieving: " +  e.Message);
+			Logger.Write("Recieving: " +  e.Message);
 			if (handleReply(e.Message))
 				return;
-			if (_debug)
-				Console.WriteLine("Recieving: " +  e.Message);
+			Logger.Write("Recieving: " +  e.Message);
 			if (getCommand(e.Message).StartsWith("keyAtPos=0 \"j\""))
 				Publisher.Run("keypress ctrl+shift+j");
 			if (getCommand(e.Message).StartsWith("keyAtPos=0 \"snippet-complete\""))
@@ -241,19 +238,17 @@ namespace vim
 			var lines = content.Split(new[] { newline }, StringSplitOptions.None);
 			if (lines.Length < location.Line)
 			{
-				if (_debug)
-					Console.WriteLine("Asked for line {0} but document only contained {1} lines",
-						location.Line,
-						lines.Length);
+				Logger.Write("Asked for line {0} but document only contained {1} lines",
+					location.Line,
+					lines.Length);
 				return;
 			}
 			var line = lines[location.Line - 1];
 			if (line.Length < location.Column)
 			{
-				if (_debug)
-					Console.WriteLine("Asked for column {0} but line was only {1} chars long",
-						location.Column,
-						line);
+				Logger.Write("Asked for column {0} but line was only {1} chars long",
+					location.Column,
+					line);
 				return;
 			}
 			var insertColumn = location.Column + ((message.Destination.Column - 1) - location.Column);
@@ -465,11 +460,9 @@ namespace vim
 
 		private VIMLocation getLocation(int bufferID)
 		{
-			if (_debug)
-				Console.WriteLine("Getting location");
+			Logger.Write("Getting location");
 			var message = runFunction("{0}:getCursor", bufferID);
-			if (_debug)
-				Console.WriteLine("Function returned " + message);
+			Logger.Write("Function returned " + message);
 			if (message == null)
 				return null;
 			 var chunks = message.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
@@ -482,8 +475,7 @@ namespace vim
 			}
 			catch (Exception ex)
 			{
-				if (_debug)
-					Console.WriteLine(ex.ToString());
+				Logger.Write(ex.ToString());
 				return null;
 			}
 		}
@@ -495,8 +487,7 @@ namespace vim
 		
 		private void send(string message, params object[] args)
 		{
-			if (_debug)
-				Console.WriteLine("Sending " + string.Format(message, args));
+			Logger.Write("Sending " + string.Format(message, args));
 			_server.Send(string.Format(message, args));
 		}
 			

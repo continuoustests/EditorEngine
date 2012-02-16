@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using EditorEngine.Core.Bootstrapping;
 using EditorEngine.Core.Messaging;
+using EditorEngine.Core.Logging;
 using EditorEngine.Core.Messaging.Messages;
 using System.Threading;
 
@@ -12,11 +14,13 @@ namespace EditorEngine
 		
 		public static void Main (string[] args)
 		{
-			if (args.Length != 1)
+			if (args.Length < 1)
 			{
 				printUsages();
 				return;
 			}
+			if (args.Contains("--logging"))
+				Logger.Enable();
 			startApplication(args[0]);
 		}
 		

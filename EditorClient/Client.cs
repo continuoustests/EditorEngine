@@ -44,7 +44,7 @@ namespace EditorClient
 	            _stream.BeginRead(_buffer, 0, _buffer.Length, ReadCompleted, _stream);
 				IsConnected = true;
 			} 
-			catch 
+			catch
 			{
                 Reconnect(retryCount);
 			}

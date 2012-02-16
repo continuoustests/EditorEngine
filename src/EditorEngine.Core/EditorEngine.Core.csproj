@@ -10,8 +10,7 @@
     <RootNamespace>EditorEngine.Core</RootNamespace>
     <AssemblyName>EditorEngine.Core</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
+    <FileUpgradeFlags></FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
   </PropertyGroup>
@@ -88,7 +87,11 @@
     <Compile Include="Commands\Handlers\GetDirtyFilesHandler.cs" />
     <Compile Include="Messaging\Messages\EditorGetDirtyFilesMessage.cs" />
     <Compile Include="Messaging\Messages\EditorDirtyFilesListMessage.cs" />
+<<<<<<< HEAD
     <Compile Include="CommandBuilding\Position.cs" />
+=======
+    <Compile Include="Logging\Logger.cs" />
+>>>>>>> 2ae324b04242378fed70e1fc38e3ce5e39455ea3
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
