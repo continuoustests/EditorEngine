@@ -164,7 +164,7 @@ namespace vim
 					 e.Message.Substring(
 					 	e.Message.IndexOf("\""), e.Message.LastIndexOf("\"") - e.Message.IndexOf("\""))
 					 	.Replace("\"", "").Trim() == "")
-				Publisher.Run("keypress nobuffers");
+				Publisher.Run("keypress gototype");
 			else if (e.Message.StartsWith("0:fileOpened=0"))
 				applyBufferID(
 					e.Message.Substring(
