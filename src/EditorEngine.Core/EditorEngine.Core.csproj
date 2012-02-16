@@ -87,11 +87,8 @@
     <Compile Include="Commands\Handlers\GetDirtyFilesHandler.cs" />
     <Compile Include="Messaging\Messages\EditorGetDirtyFilesMessage.cs" />
     <Compile Include="Messaging\Messages\EditorDirtyFilesListMessage.cs" />
-<<<<<<< HEAD
     <Compile Include="CommandBuilding\Position.cs" />
-=======
     <Compile Include="Logging\Logger.cs" />
->>>>>>> 2ae324b04242378fed70e1fc38e3ce5e39455ea3
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

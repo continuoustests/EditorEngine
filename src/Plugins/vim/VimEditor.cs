@@ -155,8 +155,6 @@ namespace vim
 			if (handleReply(e.Message))
 				return;
 			Logger.Write("Recieving: " +  e.Message);
-			if (getCommand(e.Message).StartsWith("keyAtPos=0 \"j\""))
-				Publisher.Run("keypress ctrl+shift+j");
 			if (getCommand(e.Message).StartsWith("keyAtPos=0 \"snippet-complete\""))
 				ThreadPool.QueueUserWorkItem(completeSnippet);
 			else if (getCommand(e.Message).StartsWith("keyAtPos=0 \""))
@@ -293,8 +291,7 @@ namespace vim
 
 		public void Remove(EditorRemoveMessage message)
 		{
-			if (_debug)
-				Console.WriteLine("Removing chunk for " + message.Start.File);
+			Logger.Write("Removing chunk for " + message.Start.File);
 			if (message.Start.Line > message.End.Line)
 				return;
 			GoTo(new Location(
@@ -394,8 +391,7 @@ namespace vim
 					location.Line,
 					snippetStartColumn,
 					whitespaces);
-			if (_debug)
-				Console.WriteLine(message);
+			Logger.Write(message);
 			Publisher.Run(message);
 		}
 
@@ -580,8 +576,7 @@ namespace vim
 			{
 				_replys.Remove(reply);
 			}
-			if (_debug && reply.Reply == null)
-				Console.WriteLine("Function ({0}) timed out", function);
+			Logger.Write("Function ({0}) timed out", function);
 			return reply.Reply;
 		}
 		
