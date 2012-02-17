@@ -30,7 +30,6 @@ namespace EditorEngine.Core.Commands.Handlers
 			var location = getLocation(arguments[0]);
 			if (location == null)
 				return;
-			Console.WriteLine("Dispatching goto");
 			_dispatcher.Publish(new EditorGoToMessage(location.File, location.Line, location.Column));
 		}
 		
