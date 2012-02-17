@@ -27,6 +27,14 @@ namespace EditorEngine.Core.Editors
 		private IPluginLoader _pluginFactory;
 		private IMessageDispatcher _dispatcher;
 		
+		public string CurrentEditor {
+			get { 
+				if (_editor == null)
+					return "";
+				return _editor.GetType().ToString();
+			}
+		}
+
 		public EditorDispatcher(IPluginLoader pluginFactory, IMessageDispatcher dispatcher, IFileWriter fileWriter)
 		{
 			_pluginFactory = pluginFactory;
@@ -82,7 +90,10 @@ namespace EditorEngine.Core.Editors
 		{
 			_editor = _pluginFactory.Load(message.Editor);
 			if (_editor != null)
+			{
 				_editor.Initialize(null);
+				_dispatcher.Publish(new EditorLoadedMessage(message.Message, message.Editor));
+			}
 		}
 		
 		public void Consume(EditorGoToMessage message)

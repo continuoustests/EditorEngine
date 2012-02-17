@@ -21,12 +21,13 @@ namespace EditorEngine.Core.Bootstrapping
             _dispatcher = new MessageDispatcher();
 			_endpoint = new CommandEndpoint(_dispatcher);
 			var dirtyFilesHandler = new GetDirtyFilesHandler(_dispatcher, _endpoint);
+			var loadEditorHandler = new LoadEditorHandler(_dispatcher, _endpoint);
 			
 			var commandDispatcher = new CommandDispatcher(
 				new ICommandHandler[]
 					{
 						new GoToHandler(_dispatcher),
-						new LoadEditorHandler(_dispatcher),
+						loadEditorHandler,
 						new SetFocusHandler(_dispatcher),
 						new InsertHandler(_dispatcher),
 						new RemoveHandler(_dispatcher),
@@ -39,6 +40,7 @@ namespace EditorEngine.Core.Bootstrapping
 
 			var editorDispatcher = new EditorDispatcher(new PluginLoader(_endpoint), _dispatcher, null);
 			_dispatcher.Register<EditorLoadMessage>(editorDispatcher);
+			_dispatcher.Register<EditorLoadedMessage>(loadEditorHandler);
 			_dispatcher.Register<EditorGoToMessage>(editorDispatcher);
 			_dispatcher.Register<EditorSetFocusMessage>(editorDispatcher);
 			_dispatcher.Register<EditorInsertMessage>(editorDispatcher);

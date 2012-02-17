@@ -35,15 +35,22 @@ namespace EditorEngine.Core.Tests.Editors
 		{
 			_editor.Stub(x => x.IsAlive).Return(true);
 			_pluginFactory.Stub(x => x.Load("gedit")).Return(_editor);
-			_dispatcher.Consume(new EditorLoadMessage("gedit"));
+			var message = new CommandMessage(Guid.NewGuid(), "correlationID=meh|gedit");
+			_dispatcher.Consume(
+				new EditorLoadMessage(
+					message, "gedit"));
 			_editor.AssertWasCalled(x => x.Initialize(null), y => y.IgnoreArguments());
+			_messageDispatcher.Published<EditorLoadedMessage>();
 		}
 		
 		[Test]
 		public void Should_not_initialize_editor_if_plugin_does_not_load()
 		{
 			_editor.Stub(x => x.IsAlive).Return(true);
-			_dispatcher.Consume(new EditorLoadMessage("gedit"));
+			var message = new CommandMessage(Guid.NewGuid(), "correlationID=meh|gedit");
+			_dispatcher.Consume(
+				new EditorLoadMessage(
+					message, "gedit"));
 			_editor.AssertWasNotCalled(x => x.Initialize(null), y => y.IgnoreArguments());
 		}
 		
@@ -88,7 +95,10 @@ namespace EditorEngine.Core.Tests.Editors
 		{
 			_editor.Stub(x => x.IsAlive).Return(false);
 			_pluginFactory.Stub(x => x.Load("gedit")).Return(_editor);
-			_dispatcher.Consume(new EditorLoadMessage("gedit"));
+			var message = new CommandMessage(Guid.NewGuid(), "correlationID=meh|gedit");
+			_dispatcher.Consume(
+				new EditorLoadMessage(
+					message, "gedit"));
 			Wait.ForFiveSecond().OrUntil(() => { return _messageDispatcher.GetPublishedMessage<ShutdownMessage>() != null; });
 			_messageDispatcher.Published<ShutdownMessage>();
 		}

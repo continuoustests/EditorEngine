@@ -23,9 +23,9 @@ namespace EditorEngine.Core.Endpoints
 
 		void Handle_serverIncomingMessage (object sender, MessageArgs e)
 		{
-			_dispatcher.Publish(new CommandMessage(e.ClientID, e.Message));
-			// TODO fix this.. should not pass on any query handler command
-			if (e.Message.Trim() != "get-dirty-files")
+			var command = new CommandMessage(e.ClientID, e.Message.Trim());
+			_dispatcher.Publish(command);
+			if (!e.Message.Trim().StartsWith("correlationID="))
 				_server.Send(e.Message); // Pass on to all consuming clients
 		}
 		
