@@ -37,6 +37,8 @@ namespace EditorEngine.Core.Commands.Handlers
 			_endpoint.Run(
 				message.Message.ClientID,
 				message.Message.CorrelationID + message.Editor);
+			if (message.Editor == "")
+				_dispatcher.Publish(new ShutdownMessage());
 		}
 		
 		private string getUsage()

@@ -47,7 +47,9 @@ namespace EditorEngine.Core.Tests.Commands.Handlers
 		[Test]
 		public void When_consuming_editor_loaded_message_it_will_notify_clients()
 		{
-			_handler.Consume(new EditorLoadedMessage(msg("correlationID=done|vi"), "vi"));
+			_handler.Consume(
+				new EditorLoadedMessage(
+					new CommandMessage(Guid.Empty, "correlationID=done|editor vi"), "vi"));
 			_endpoint.AssertWasCalled(
 				x => x.Run(
 					Guid.Empty,

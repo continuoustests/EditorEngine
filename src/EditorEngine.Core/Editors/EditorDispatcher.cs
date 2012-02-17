@@ -94,6 +94,10 @@ namespace EditorEngine.Core.Editors
 				_editor.Initialize(null);
 				_dispatcher.Publish(new EditorLoadedMessage(message.Message, message.Editor));
 			}
+			else
+			{
+				_dispatcher.Publish(new EditorLoadedMessage(message.Message, ""));
+			}
 		}
 		
 		public void Consume(EditorGoToMessage message)
