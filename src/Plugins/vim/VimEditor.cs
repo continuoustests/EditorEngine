@@ -56,6 +56,7 @@ namespace vim
 	public class VimEditor : IEditor
 	{
 		private Process _process = null;
+		private bool _isInitialized = false;
 		private ITcpServer _server = null;
 		private List<Buffer> _buffers = new List<Buffer>();
 		private int _correlationCounter = 1;
@@ -88,7 +89,7 @@ namespace vim
 		{
 			get
 			{
-				if (_process == null)
+				if (!_isInitialized || _process == null)
 					return true;
 				return !_process.HasExited;
 			}
@@ -113,6 +114,7 @@ namespace vim
 			_process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			_process.Start();
 			Thread.Sleep(500);
+			_isInitialized = true;
 			GoTo(location);
 		}
 		
