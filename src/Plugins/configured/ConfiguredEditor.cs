@@ -15,6 +15,7 @@ namespace configured
 {
     public class ConfiguredEditor : IEditor
     {
+		private string _editorName;
         private DateTime _isAliveTimeout = DateTime.Now;
         private bool _isInitialized = false;
         private AliveCommand _aliveCommand = null;
@@ -42,6 +43,11 @@ namespace configured
                 return result.Contains(_aliveCommand.CheckText);
             }
         }
+
+		public ConfiguredEditor()
+		{
+			_editorName = Path.GetFileNameWithoutExtension(typeof(ConfiguredEditor).Assembly.Location);
+		}
 
         public void Initialize(Location location)
         {
@@ -116,7 +122,7 @@ namespace configured
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to open configured editor");
+                Console.WriteLine("Failed to open {0} editor", _editorName);
                 Console.WriteLine(ex.ToString());
                 throw;
             }
@@ -127,7 +133,7 @@ namespace configured
             var file =
                 Path.Combine(
                     Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                    "configured.editor");
+                    _editorName + ".editor");
             var document = new XmlDocument();
             document.Load(file);
             var node = document.SelectSingleNode("editor/launch");
@@ -163,6 +169,8 @@ namespace configured
 
         private Process runCommand(string cmd, string parameters, bool visible)
         {
+			if (cmd == "")
+				return null; 
             var process = new Process();
             process.StartInfo = new ProcessStartInfo(cmd, parameters);
             process.StartInfo.CreateNoWindow = visible;
@@ -177,6 +185,8 @@ namespace configured
 
         private string queryCommand(string cmd, string parameters, bool visible)
         {
+			if (cmd == "")
+				return "";
             var process = new Process();
             process.StartInfo = new ProcessStartInfo(cmd, parameters);
             process.StartInfo.RedirectStandardOutput = true;
