@@ -254,7 +254,9 @@ namespace vim
 			var insertColumn = location.Column + ((message.Destination.Column - 1) - location.Column);
 			var lineModified =
 				line.Substring(0, insertColumn) +
-				message.Text.Replace(Environment.NewLine, newline) +
+				message.Text
+					.Replace(Environment.NewLine, newline)
+					.Replace("\"", "\\\"") +
 				line.Substring(insertColumn, line.Length - insertColumn);
 			var length = line.Length;
 			var lastLine = location.Line != lines.Length - 1;
