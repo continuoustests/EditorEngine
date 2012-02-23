@@ -160,13 +160,13 @@ namespace vim
 			if (getCommand(e.Message).StartsWith("keyAtPos=0 \"snippet-complete\""))
 				ThreadPool.QueueUserWorkItem(completeSnippet);
 			else if (getCommand(e.Message).StartsWith("keyAtPos=0 \""))
-				Publisher.Run("keypress " + getCommand(e.Message)
+				Publisher.Run(getCommand(e.Message)
 					.Substring(12, getCommand(e.Message).LastIndexOf("\"") - 12));
 			else if (e.Message.StartsWith("0:fileOpened=0") &&
 					 e.Message.Substring(
 					 	e.Message.IndexOf("\""), e.Message.LastIndexOf("\"") - e.Message.IndexOf("\""))
 					 	.Replace("\"", "").Trim() == "")
-				Publisher.Run("keypress gototype");
+				Publisher.Run("gototype");
 			else if (e.Message.StartsWith("0:fileOpened=0"))
 				applyBufferID(
 					e.Message.Substring(
@@ -388,7 +388,7 @@ namespace vim
 			var whitespaces = getWhitespacePrefix(line);
 			var snippetStartColumn = word.Column;
 			var message = 
-				string.Format("keypress snippet-complete \"{0}\" \"{1}\" \"{2}|{3}|{4}\" \"{5}\"",
+				string.Format("snippet-complete \"{0}\" \"{1}\" \"{2}|{3}|{4}\" \"{5}\"",
 					Path.GetExtension(location.Buffer.Fullpath),
 					word.Content,
 					location.Buffer.Fullpath,
