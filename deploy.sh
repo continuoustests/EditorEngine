@@ -34,8 +34,8 @@ cp -r $SOURCEDIR/Plugins/vim/vim.parameters $DEPLOYDIR/plugins
 cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins
 cp -r $SOURCEDIR/Plugins/configured/configured.editor $DEPLOYDIR/plugins
 cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins/emacs.dll
-cp -r $SRC/Plugins/configured/Configurations/emacs.editor $DEPLOYDIR/plugins
+cp -r $SOURCEDIR/Plugins/configured/Configurations/emacs.editor $DEPLOYDIR/plugins
 cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins/notepad++.dll
-cp -r $SRC/Plugins/configured/Configurations/notepad++.editor $DEPLOYDIR/plugins
+cp -r $SOURCEDIR/Plugins/configured/Configurations/notepad++.editor $DEPLOYDIR/plugins
 cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins/ultraedit.dll
-cp -r $SRC/Plugins/configured/Configurations/ultraedit.editor $DEPLOYDIR/plugins
+cp -r $SOURCEDIR/Plugins/configured/Configurations/ultraedit.editor $DEPLOYDIR/plugins
