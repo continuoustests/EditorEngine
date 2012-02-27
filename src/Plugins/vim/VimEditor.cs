@@ -64,6 +64,7 @@ namespace vim
 		private string _executable = null;
 		private string _parameters = null;
 		private int _functrionTimeout = 2000;
+		private Queue<string> _modifications = new Queue<string>();
 		
 		public ITcpServer Server
 		{ 
@@ -113,9 +114,18 @@ namespace vim
 			_process.StartInfo.UseShellExecute = true;
 			_process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			_process.Start();
+			listenForModifications();
 			Thread.Sleep(500);
 			_isInitialized = true;
 			GoTo(location);
+		}
+
+		private void listenForModifications()
+		{
+			var timer = new System.Timers.Timer(10000);
+			timer.Elapsed += (sender, e) => handleModifications();
+			timer.Interval = 100;
+			timer.Enabled = true;
 		}
 		
 		private string getExecutable()
@@ -156,7 +166,6 @@ namespace vim
 			Logger.Write("Recieving: " +  e.Message);
 			if (handleReply(e.Message))
 				return;
-			Logger.Write("Recieving: " +  e.Message);
 			if (getCommand(e.Message).StartsWith("keyAtPos=0 \"snippet-complete\""))
 				ThreadPool.QueueUserWorkItem(completeSnippet);
 			else if (getCommand(e.Message).StartsWith("keyAtPos=0 \""))
@@ -175,6 +184,10 @@ namespace vim
 						.Trim(), true);
 			else if (getCommand(e.Message).StartsWith("killed"))
 				removeBuffer(getBuffer(e.Message));
+			else if (getCommand(e.Message).StartsWith("insert="))
+				_modifications.Enqueue(e.Message);
+			else if (getCommand(e.Message).StartsWith("remove="))
+				_modifications.Enqueue(e.Message);
 		}
 
 		public void SetFocus()
@@ -355,6 +368,26 @@ namespace vim
 				.Where(x => !x.Closed && getModified(x.ID) == "1")
 				.Select(x => new KeyValuePair<string,string>(x.Fullpath, getText(x.ID)))
 				.ToArray();
+		}
+
+		private void handleModifications()
+		{
+			var modifications = new List<string>();
+			while (_modifications.Count != 0)
+			{
+				var message = _modifications.Dequeue();
+				var bufferID = getBuffer(message);
+				var buffer = _buffers.FirstOrDefault(x => x.ID.Equals(bufferID));
+				if (buffer == null)
+					continue;
+				if (!modifications.Contains(buffer.Fullpath))
+					modifications.Add(buffer.Fullpath);
+			}
+			modifications
+				.ForEach(x =>
+					Publisher.Run(
+						string.Format("editor buffer-changed \"{0}\"",
+							x)));
 		}
 
 		private void completeSnippet(object status)

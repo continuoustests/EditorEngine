@@ -31,7 +31,7 @@ namespace vim.Tests
 		public void When_recieving_mm_highlight_keypress_is_should_pass_on_to_publisher()
 		{
 			_server.Publish("12:keyAtPos=0 \"j\"");
-			_endpoint.Ran("keypress ctrl+shift+j");
+			_endpoint.Ran("j");
 		}
 		
 		[Test]
@@ -192,7 +192,7 @@ namespace vim.Tests
 			_server.Publish("0:keyAtPos=0 \"snippet-complete\"");
 			Thread.Sleep(800);
 			_server.Sent("0:getCursor/2");
-			_endpoint.Ran("keypress snippet-complete \"\" \"content\" \"file_to_write_to|2|1\" \"\"");
+			_endpoint.Ran("snippet-complete \"\" \"content\" \"file_to_write_to|2|1\" \"\"");
 		}
 	}
 

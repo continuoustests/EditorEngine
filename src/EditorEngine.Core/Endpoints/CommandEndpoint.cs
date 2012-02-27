@@ -3,6 +3,7 @@ using System.ServiceModel;
 using EditorEngine.Core.Endpoints.Tcp;
 using EditorEngine.Core.Messaging;
 using EditorEngine.Core.Messaging.Messages;
+using EditorEngine.Core.Logging;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
@@ -31,11 +32,13 @@ namespace EditorEngine.Core.Endpoints
 		
 		public void Run(string cmd)
 		{
+			Logger.Write("Publishing: " + cmd);
 			_server.Send(cmd);
 		}
 		
 		public void Run(Guid clientID, string cmd)
 		{
+			Logger.Write("Publishing: " + cmd);
 			_server.Send(cmd, clientID);
 		}
 		
