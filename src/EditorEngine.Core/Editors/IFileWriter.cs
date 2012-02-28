@@ -40,9 +40,9 @@ namespace EditorEngine.Core.Editors
 							writer.Write(line);
 					}
 				}
-				File.Delete(message.Destination.File);
-				File.Move(tempFile, message.Destination.File);
 			}
+            File.Delete(message.Destination.File);
+            File.Move(tempFile, message.Destination.File);
 		}
 
 		public void Remove(EditorRemoveMessage message)
@@ -85,9 +85,9 @@ namespace EditorEngine.Core.Editors
 							writer.Write(line);
 					}
 				}
-				File.Delete(message.Start.File);
-				File.Move(tempFile, message.Start.File);
 			}
+            File.Delete(message.Start.File);
+            File.Move(tempFile, message.Start.File);
 		}
 	}
 }

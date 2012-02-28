@@ -148,8 +148,17 @@ namespace vim.Tests
 			_server.Sent("1:setDot!0 2/3");
 			_server.Sent("0:getCursor/2");
 			_server.Sent("1:remove/0 15 7");
-			_server.Sent("1:remove/0 25 6");
+            if (isWindows())
+                _server.Sent("1:remove/0 25 8");
+            else
+			    _server.Sent("1:remove/0 25 6");
 		}
+
+        private bool isWindows()
+        {
+            return Environment.OSVersion.Platform != PlatformID.Unix &&
+                   Environment.OSVersion.Platform != PlatformID.MacOSX;
+        }
 
 		[Test]
 		public void When_getting_dirty_files_an_no_files_are_dirty_return_empty_list()

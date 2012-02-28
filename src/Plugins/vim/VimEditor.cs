@@ -683,9 +683,11 @@ namespace vim
 			if (position != 0)
 				_position = position - 1;
 			var start = getStart();
-			var end = getEnd();
+			var end = getEnd(start);
 			Content = _line.Substring(start, end - start);
 			Column = start + 1;
+            if (start == position)
+                Column = start;
 		}
 
 		private int getStart()
@@ -698,11 +700,11 @@ namespace vim
 			return separators.Max(x => x) + 1;
 		}
 
-		private int getEnd()
+		private int getEnd(int after)
 		{
 			var separators = new List<int>();
-			separators.Add(_line.IndexOf(" ", _position));
-			separators.Add(_line.IndexOf("\t", _position));
+			separators.Add(_line.IndexOf(" ", after));
+			separators.Add(_line.IndexOf("\t", after));
 			if (separators.Max(x => x) == -1)
 				return _line.Length;
 			return separators.Max(x => x);
