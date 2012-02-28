@@ -155,7 +155,7 @@ namespace vim.Tests
 		public void When_getting_dirty_files_an_no_files_are_dirty_return_empty_list()
 		{
 			_server.WhenPublishsing("0:getModified/1", "1 0");
-			Assert.That(_editor.GetDirtyFiles().Length, Is.EqualTo(0));
+			Assert.That(_editor.GetDirtyFiles(null).Length, Is.EqualTo(0));
 		}
 
 		[Test]
@@ -170,7 +170,7 @@ namespace vim.Tests
 			_server.WhenPublishsing("3:getModified/6", "6 1");
 			_server.WhenPublishsing("1:getText/4", "4 This");
 			_server.WhenPublishsing("3:getText/7", "7 the answer");
-			var files = _editor.GetDirtyFiles();
+			var files = _editor.GetDirtyFiles(null);
 			//throw new Exception(_server.Messages);
 			Assert.That(files.Length, Is.EqualTo(2));
 			Assert.That(files[0].Key, Is.EqualTo("file1"));

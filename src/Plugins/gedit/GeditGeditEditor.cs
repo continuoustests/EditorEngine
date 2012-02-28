@@ -68,7 +68,7 @@ namespace gedit
 		{
 		}
 
-		public KeyValuePair<string,string>[] GetDirtyFiles()
+		public KeyValuePair<string,string>[] GetDirtyFiles(string file)
 		{
 			return new KeyValuePair<string,string>[] {};
 		}

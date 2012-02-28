@@ -359,13 +359,13 @@ namespace vim
 			}
 		}
 
-		public KeyValuePair<string,string>[] GetDirtyFiles()
+		public KeyValuePair<string,string>[] GetDirtyFiles(string file)
 		{
 			var modifiedCount = getModified();
 			if (modifiedCount == "0")
 				return new KeyValuePair<string,string>[] {};
 			return _buffers
-				.Where(x => !x.Closed && getModified(x.ID) == "1")
+				.Where(x => !x.Closed && getModified(x.ID) == "1" && (file == null || file.Equals(x.Fullpath)))
 				.Select(x => new KeyValuePair<string,string>(x.Fullpath, getText(x.ID)))
 				.ToArray();
 		}

@@ -41,7 +41,7 @@ namespace EditorEngine.Core.Editors
 		void Remove(EditorRemoveMessage msg);
 
 		// Return list of open unsaved files
-		KeyValuePair<string,string>[] GetDirtyFiles();
+		KeyValuePair<string,string>[] GetDirtyFiles(string file);
 	}
 }
 

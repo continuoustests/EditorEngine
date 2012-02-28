@@ -179,10 +179,13 @@ namespace EditorEngine.Core.Editors
 
 		public void Consume(EditorGetDirtyFilesMessage message)
 		{
+			string file = null;
+			if (message.Message.Arguments.Count > 0)
+				file = message.Message.Arguments[0];
 			_dispatcher.Publish(
 				new EditorDirtyFilesListMessage(
 					message.Message,
-					_editor.GetDirtyFiles()));
+					_editor.GetDirtyFiles(file)));
 		}
 	}
 }
