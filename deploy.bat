@@ -34,3 +34,5 @@ echo f|xcopy %BINARYDIR%\configured.dll %DEPLOYDIR%\plugins\notepad++.dll /y
 xcopy %SRC%\Plugins\configured\Configurations\notepad++.editor %DEPLOYDIR%\plugins\
 echo f|xcopy %BINARYDIR%\configured.dll %DEPLOYDIR%\plugins\ultraedit.dll /y
 xcopy %SRC%\Plugins\configured\Configurations\ultraedit.editor %DEPLOYDIR%\plugins\
+echo f|xcopy %BINARYDIR%\configured.dll %DEPLOYDIR%\plugins\sublime.dll /y
+xcopy %SRC%\Plugins\configured\Configurations\sublime.editor %DEPLOYDIR%\plugins\
