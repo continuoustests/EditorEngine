@@ -40,7 +40,7 @@ namespace vim.Tests
 			_editor.GoTo(new Location("file", 10, 15));
 			_server.Publish("0:fileOpened=0 \"file\"");
 			_server.Sent("1:editFile!0 \"file\"");
-			_server.Sent("1:setDot!0 10/15");
+			_server.Sent("1:setDot!0 10/14");
 			Assert.That(_editor.Buffers.Count, Is.EqualTo(1));
 			Assert.That(_editor.Buffers.Exists(x => x.ID.Equals(1) && x.Fullpath.Equals("file")), Is.True);
 		}
@@ -145,7 +145,7 @@ namespace vim.Tests
 							Line = 3,
 							Column = 7
 						}));
-			_server.Sent("1:setDot!0 2/3");
+			_server.Sent("1:setDot!0 2/2");
 			_server.Sent("0:getCursor/2");
 			_server.Sent("1:remove/0 15 7");
             if (isWindows())

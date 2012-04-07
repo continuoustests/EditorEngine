@@ -214,7 +214,7 @@ namespace vim
 
 		private void goTo(int buffer, Location location)
 		{
-			send("{0}:setDot!0 {1}/{2}", buffer, location.Line, location.Column);
+			send("{0}:setDot!0 {1}/{2}", buffer, location.Line, location.Column - 1);
 		}
 	
 		public void BeginBatchUpdate()
@@ -237,7 +237,7 @@ namespace vim
 			GoTo(new Location(
 				message.Destination.File,
 				message.Destination.Line,
-				message.Destination.Column - 1));
+				message.Destination.Column));
 			var location = getLocation();
 			if (location == null)
 				return;
@@ -264,7 +264,7 @@ namespace vim
 					line);
 				return;
 			}
-			var insertColumn = location.Column + ((message.Destination.Column - 1) - location.Column);
+			var insertColumn = location.Column; // + ((message.Destination.Column - 1) - location.Column);
 			var lineModified =
 				line.Substring(0, insertColumn) +
 				message.Text
@@ -297,7 +297,7 @@ namespace vim
 				GoTo(new Location(
 					message.Destination.File,
 					message.Destination.Line,
-					message.Destination.Column + message.Text.Length - 1));
+					message.Destination.Column + message.Text.Length));
 			}
 		}	
 
@@ -339,12 +339,12 @@ namespace vim
 			var lines = content.Split(new[] { newline }, StringSplitOptions.None);
 			for (int line = message.End.Line; line >= message.Start.Line; line--)
 			{
-				var column = 0;
+				var column = 1;
 				if (line == message.Start.Line)
 					column = message.Start.Column;
 				var length = lines[line - 1].Length - column + newline.Length;
 				if (line == message.End.Line)
-					length = message.End.Column;
+					length = message.End.Column - 1;
 				GoTo(new Location(
 					message.Start.File,
 					line,
@@ -410,13 +410,13 @@ namespace vim
 						{
 							File = location.Buffer.Fullpath,
 							Line = location.Line,
-							Column = word.Column - 1
+							Column = word.Column
 						},
 					new EditorEngine.Core.Arguments.GoTo()
 						{
 							File = location.Buffer.Fullpath,
 							Line = location.Line,
-							Column = (word.Column - 1) + word.Content.Length
+							Column = word.Column + word.Content.Length
 						}));
 			var whitespaces = getWhitespacePrefix(line);
 			var snippetStartColumn = word.Column;

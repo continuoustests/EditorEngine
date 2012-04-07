@@ -162,7 +162,7 @@ namespace EditorEngine.Core.Editors
 						message.End);
 			var insert = new EditorInsertMessage(
 						message.Text,
-						message.End,
+						message.Start,
 						null);
 			if (queryEditor<bool>(() => { return _editor.CanRemoveFor(message.Start.File); }) &&
 				queryEditor<bool>(() => { return _editor.CanInsertFor(message.Start.File); }))
