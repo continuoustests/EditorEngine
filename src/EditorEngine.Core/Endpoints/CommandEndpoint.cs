@@ -24,7 +24,6 @@ namespace EditorEngine.Core.Endpoints
 
 		void Handle_serverIncomingMessage (object sender, MessageArgs e)
 		{
-			Console.WriteLine("Received " + e.Message);
 			var command = new CommandMessage(e.ClientID, e.Message.Trim());
 			_dispatcher.Publish(command);
 			if (!e.Message.Trim().StartsWith("correlationID="))
@@ -47,7 +46,6 @@ namespace EditorEngine.Core.Endpoints
 		{
 			_server.Start();
 			writeInstanceInfo(key);
-			Console.WriteLine("Server started running on port " + _server.Port.ToString());
 		}
 		
 		public void Stop()
@@ -67,7 +65,6 @@ namespace EditorEngine.Core.Endpoints
 			sb.AppendLine(key);
 			sb.AppendLine(_server.Port.ToString());
 			File.WriteAllText(_instanceFile, sb.ToString());
-			Console.WriteLine("Insance infor written to " + _instanceFile);
 		}
 	}
 }

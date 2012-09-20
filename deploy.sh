@@ -40,3 +40,4 @@ cp -r $SOURCEDIR/Plugins/configured/Configurations/notepad++.editor $DEPLOYDIR/p
 cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins/ultraedit.dll
 cp -r $SOURCEDIR/Plugins/configured/Configurations/ultraedit.editor $DEPLOYDIR/plugins
 cp -r $BINARYDIR/sublime.dll $DEPLOYDIR/plugins
+cp -r $SOURCEDIR/Plugins/sublime/sublime.editor $DEPLOYDIR/plugins
