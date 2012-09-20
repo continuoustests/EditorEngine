@@ -103,7 +103,7 @@ namespace sublime
 		}
 
 		private string readMessage(Socket server) {
-			var data = new byte[1024];
+			var data = new byte[5120000]; // 5Mb
 	        var receivedDataLength = server.Receive(data);
 	        return Encoding.UTF8
 	        	.GetString(data, 0, receivedDataLength)
@@ -111,7 +111,7 @@ namespace sublime
 		}
 
 		private Socket connect() {
-			var ip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9999);
+			var ip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9998);
 		    var server = new Socket(AddressFamily.InterNetwork,SocketType.Stream, ProtocolType.Tcp);
 		    server.Connect(ip);
 		    return server;
