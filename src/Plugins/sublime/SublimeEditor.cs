@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using System.Linq;
 using System.Reflection;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -107,10 +108,12 @@ namespace sublime
 		}
 
 		public KeyValuePair<string,string>[] GetDirtyFiles(string file) {
-			var modified = new[] { file };
-			if (file == null) {
-				modified = request("get-dirty-buffers")
+			var modified = request("get-dirty-buffers")
 					.Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+			if (file != null) {
+				if (!modified.Contains(file))
+                    return new KeyValuePair<string,string>[] {};
+                modified = new[] { file };
 			}
 			var buffers = new List<KeyValuePair<string, string>>();
 			foreach (var fileName in modified) {
