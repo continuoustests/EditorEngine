@@ -117,7 +117,9 @@ namespace sublime
 			}
 			var buffers = new List<KeyValuePair<string, string>>();
 			foreach (var fileName in modified) {
-				var content = request("get-buffer-content \"" + fileName + "\"");
+				var content = 
+                    request("get-buffer-content \"" + fileName + "\"")
+                        .Replace("||newline||", Environment.NewLine);
 				buffers.Add(new KeyValuePair<string, string>(fileName, content));
 			}
 			return buffers.ToArray();
