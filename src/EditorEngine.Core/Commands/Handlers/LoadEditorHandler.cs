@@ -23,7 +23,7 @@ namespace EditorEngine.Core.Commands.Handlers
 		public void Execute(CommandMessage message)
 		{
 			var arguments = message.Arguments;
-			if (arguments.Count != 1)
+			if (arguments.Count == 0)
 			{
 				_dispatcher.Publish(
 					new UsageErrorMessage(string.Format("Invalid number of arguments. {0}", getUsage())));

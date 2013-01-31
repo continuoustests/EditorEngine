@@ -96,7 +96,7 @@ namespace vim
 			}
 		}
 		
-		public void Initialize(Location location)
+		public void Initialize(Location location, string[] args)
 		{
 			_server = null;
 			_server = new TcpServer(Environment.NewLine);

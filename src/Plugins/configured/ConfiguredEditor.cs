@@ -49,7 +49,7 @@ namespace configured
 			_editorName = Path.GetFileNameWithoutExtension(typeof(ConfiguredEditor).Assembly.Location);
 		}
 
-        public void Initialize(Location location)
+        public void Initialize(Location location, string[] args)
         {
             tryOpenConfiguration();
             if (_launchCommand == null)

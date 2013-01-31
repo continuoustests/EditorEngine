@@ -91,7 +91,10 @@ namespace EditorEngine.Core.Editors
 			_editor = _pluginFactory.Load(message.Editor);
 			if (_editor != null)
 			{
-				_editor.Initialize(null);
+				var args = new string[] {};
+				if (message.Message.Arguments != null)
+					args = 	message.Message.Arguments.ToArray();
+				_editor.Initialize(null, args);
 				_dispatcher.Publish(new EditorLoadedMessage(message.Message, message.Editor));
 			}
 			else

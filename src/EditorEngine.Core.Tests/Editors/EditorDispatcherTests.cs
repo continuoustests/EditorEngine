@@ -39,7 +39,7 @@ namespace EditorEngine.Core.Tests.Editors
 			_dispatcher.Consume(
 				new EditorLoadMessage(
 					message, "gedit"));
-			_editor.AssertWasCalled(x => x.Initialize(null), y => y.IgnoreArguments());
+			_editor.AssertWasCalled(x => x.Initialize(null, new string[] {}), y => y.IgnoreArguments());
 			_messageDispatcher.Published<EditorLoadedMessage>();
 		}
 		
@@ -51,7 +51,7 @@ namespace EditorEngine.Core.Tests.Editors
 			_dispatcher.Consume(
 				new EditorLoadMessage(
 					message, "gedit"));
-			_editor.AssertWasNotCalled(x => x.Initialize(null), y => y.IgnoreArguments());
+			_editor.AssertWasNotCalled(x => x.Initialize(null, new string[] {}), y => y.IgnoreArguments());
 		}
 		
 		[Test]

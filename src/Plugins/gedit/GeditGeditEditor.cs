@@ -23,7 +23,7 @@ namespace gedit
 			}
 		}
 		
-		public void Initialize(Location location)
+		public void Initialize(Location location, string[] args)
 		{
 			var argument = "";
 			if (location != null)

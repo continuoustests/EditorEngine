@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using EditorEngine.Core.Editors;
 using EditorEngine.Core.Endpoints;
 using EditorEngine.Core.Messaging.Messages;
+using EditorEngine.Core.Arguments;
 
 using System.Net;
 using System.Net.Sockets;
@@ -35,8 +36,9 @@ namespace sublime
 			}
 		}
 		
-		public void Initialize(Location location) {
+		public void Initialize(Location location, string[] args) {
 			openConfiguration();
+			appendArguments(args);
 			if (_launchCommand == null)
                 return;
             runCommand(
@@ -182,6 +184,16 @@ namespace sublime
                 _port = int.Parse(node.InnerText);
         }
 
+		private void appendArguments(string[] arguments) {
+			var args = ArgumentParser.Parse(arguments);
+			var sublimeProject = args
+				.Where(p => p.Key == "--editor.sublime.project")
+	            .Select(p => p.Value)
+	            .FirstOrDefault();
+			if (sublimeProject != null)
+				_launchCommand.Parameter += " --project \"" + sublimeProject + "\"";
+		}
+
         private Process runCommand(string cmd, string parameters, bool visible) {
 			if (cmd == "")
 				return null; 
@@ -201,7 +213,7 @@ namespace sublime
 	class Command
     {
         public string Executable { get; private set; }
-        public string Parameter { get; private set; }
+        public string Parameter { get; set; }
 
         public Command(string exe, string cmd)
         {

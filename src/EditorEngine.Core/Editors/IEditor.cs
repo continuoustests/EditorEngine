@@ -14,7 +14,7 @@ namespace EditorEngine.Core.Editors
 		bool IsAlive { get; }
 		
 		// Launch the editor and if not null go to location
-		void Initialize(Location location);
+		void Initialize(Location location, string[] args);
 		
 		// Set the editor window as active window
 		void SetFocus();
