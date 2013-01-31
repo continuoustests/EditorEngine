@@ -31,3 +31,5 @@ Debug/
 Release/
 AutoTest.config
 AutoTest.config.old
+*.sublime-project
+*.sublime-workspace
