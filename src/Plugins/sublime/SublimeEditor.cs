@@ -13,6 +13,7 @@ using EditorEngine.Core.Arguments;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace sublime
 {
@@ -31,7 +32,12 @@ namespace sublime
 						return true;
 					return request("ping") == "pong";
 				} catch {
-					return false;
+					Thread.Sleep(100);
+					try {
+						return request("ping") == "pong";
+					} catch {
+						return false;
+					}
 				}
 			}
 		}
@@ -190,8 +196,17 @@ namespace sublime
 				.Where(p => p.Key == "--editor.sublime.project")
 	            .Select(p => p.Value)
 	            .FirstOrDefault();
-			if (sublimeProject != null)
-				_launchCommand.Parameter += " --project \"" + sublimeProject + "\"";
+			if (sublimeProject != null) {
+				if (!isRooted(sublimeProject))
+					sublimeProject = Path.Combine(Environment.CurrentDirectory, sublimeProject);
+				_launchCommand.Parameter += " --add \"" + sublimeProject + "\"";
+			}
+		}
+
+		private bool isRooted(string path) {
+			if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+				return (File.Exists(path) && path.StartsWith("/")) || path.StartsWith("~");
+			return Path.IsPathRooted(path);
 		}
 
         private Process runCommand(string cmd, string parameters, bool visible) {
