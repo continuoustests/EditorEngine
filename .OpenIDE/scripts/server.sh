@@ -30,4 +30,4 @@ if [ "$2" = "get-command-definitions" ]; then
 fi
 
 ./deploy.sh
-mono --debug ReleaseBinaries/EditorEngine.exe src/EditorEngine/bin/AutoTest.Net
+mono --debug ReleaseBinaries/EditorEngine.exe src/EditorEngine/bin/AutoTest.Net --logging
