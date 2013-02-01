@@ -88,18 +88,18 @@ namespace EditorEngine.Core.Editors
 		
 		public void Consume(EditorLoadMessage message)
 		{
-			_editor = _pluginFactory.Load(message.Editor);
-			if (_editor != null)
+			if (_editor == null)
 			{
+				_editor = _pluginFactory.Load(message.Editor);
+				if (_editor == null) {
+					_dispatcher.Publish(new EditorLoadedMessage(message.Message, ""));
+					return;
+				}
 				var args = new string[] {};
 				if (message.Message.Arguments != null)
 					args = 	message.Message.Arguments.ToArray();
 				_editor.Initialize(null, args);
 				_dispatcher.Publish(new EditorLoadedMessage(message.Message, message.Editor));
-			}
-			else
-			{
-				_dispatcher.Publish(new EditorLoadedMessage(message.Message, ""));
 			}
 		}
 		

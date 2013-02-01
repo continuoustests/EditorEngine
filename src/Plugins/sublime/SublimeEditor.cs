@@ -47,16 +47,30 @@ namespace sublime
 			appendArguments(args);
 			if (_launchCommand == null)
                 return;
-            runCommand(
+            var proc = runCommand(
                 _launchCommand.Executable,
                 _launchCommand.Parameter,
                 true);
+            var file = writeInvite(proc);
             System.Threading.ThreadPool
             	.QueueUserWorkItem(
             		(m) => {
-            			System.Threading.Thread.Sleep(4000);
+            			var invite = m.ToString();
+            			while (true) {
+            				try {
+            					var content = File.ReadAllText(invite);
+            					if (content.Length > 0) {
+            						_port = int.Parse(content);
+            						break;
+            					}
+        					} catch {
+        					}
+        					System.Threading.Thread.Sleep(100);
+            			}
             			_initialized = true;
-            		});
+            			System.Threading.Thread.Sleep(100);
+            			File.Delete(invite);
+            		}, file);
 		}
 		
 		public void SetFocus() {
@@ -131,6 +145,14 @@ namespace sublime
 				buffers.Add(new KeyValuePair<string, string>(fileName, content));
 			}
 			return buffers.ToArray();
+		}
+
+		private string writeInvite(Process proc) {
+			var file = Path.Combine(Path.GetTempPath(), "sublime_invite." + proc.Id.ToString());
+			if (File.Exists(file))
+				File.Delete(file);
+			File.WriteAllText(file, "");
+			return file;
 		}
 
 		private void send(string msg) {
