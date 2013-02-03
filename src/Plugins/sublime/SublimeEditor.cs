@@ -222,7 +222,15 @@ namespace sublime
 				if (!isRooted(sublimeProject))
 					sublimeProject = Path.Combine(Environment.CurrentDirectory, sublimeProject);
 				_launchCommand.Parameter += " --add \"" + sublimeProject + "\"";
+				if (isSublimeRunning())
+					_launchCommand.Parameter += " -n";
 			}
+		}
+
+		private bool isSublimeRunning() {
+			return Process
+				.GetProcesses()
+				.Any(x => x.ProcessName.Contains(_launchCommand.Executable));
 		}
 
 		private bool isRooted(string path) {
