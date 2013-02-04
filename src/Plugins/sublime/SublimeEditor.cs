@@ -69,7 +69,6 @@ namespace sublime
             			}
             			_initialized = true;
             			System.Threading.Thread.Sleep(100);
-            			File.Delete(invite);
             		}, file);
 		}
 		
@@ -148,6 +147,14 @@ namespace sublime
 		}
 
 		private string writeInvite(Process proc) {
+			var existing = Process
+				.GetProcesses()
+				.FirstOrDefault(x => 
+					x.ProcessName.Contains(_launchCommand.Executable) &&
+					File.Exists(Path.Combine(Path.GetTempPath(), "sublime_invite." + x.Id.ToString())));
+			if (existing != null)
+				return Path.Combine(Path.GetTempPath(), "sublime_invite." + existing.Id.ToString());
+			
 			var file = Path.Combine(Path.GetTempPath(), "sublime_invite." + proc.Id.ToString());
 			if (File.Exists(file))
 				File.Delete(file);
