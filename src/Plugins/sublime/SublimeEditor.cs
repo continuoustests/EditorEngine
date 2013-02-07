@@ -225,13 +225,13 @@ namespace sublime
 				.Where(p => p.Key == "--editor.sublime.project")
 	            .Select(p => p.Value)
 	            .FirstOrDefault();
-			if (sublimeProject != null) {
+			if (sublimeProject != null && File.Exists(sublimeProject)) {
 				if (!isRooted(sublimeProject))
 					sublimeProject = Path.Combine(Environment.CurrentDirectory, sublimeProject);
 				_launchCommand.Parameter += " --add \"" + sublimeProject + "\"";
-				if (isSublimeRunning())
-					_launchCommand.Parameter += " -n";
 			}
+			if (isSublimeRunning())
+				_launchCommand.Parameter += " -n";
 		}
 
 		private bool isSublimeRunning() {
