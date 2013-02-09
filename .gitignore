@@ -33,3 +33,4 @@ AutoTest.config
 AutoTest.config.old
 *.sublime-project
 *.sublime-workspace
+.OpenIDE/active.profile
