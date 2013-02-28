@@ -228,9 +228,9 @@ namespace sublime
 			if (sublimeProject != null) {
 				if (Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix)
 					sublimeProject = sublimeProject.Replace("/", "\\");
-				if (File.Exists(sublimeProject)) {
-					if (!isRooted(sublimeProject))
+				if (!isRooted(sublimeProject))
 						sublimeProject = Path.Combine(Environment.CurrentDirectory, sublimeProject);
+				if (File.Exists(sublimeProject)) {
 					_launchCommand.Parameter += " --add \"" + sublimeProject + "\"";
 				}
 			}
