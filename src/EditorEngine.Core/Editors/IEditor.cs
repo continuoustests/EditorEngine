@@ -42,6 +42,9 @@ namespace EditorEngine.Core.Editors
 
 		// Return list of open unsaved files
 		KeyValuePair<string,string>[] GetDirtyFiles(string file);
+
+		// Runs editor spesific command
+		void RunCommand(string[] args);
 	}
 }
 

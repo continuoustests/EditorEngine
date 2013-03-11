@@ -82,6 +82,10 @@ namespace gedit
 			proc.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			proc.Start();
 		}
+		
+		public void RunCommand(string[] args)
+        {
+        }
 	}
 }
 

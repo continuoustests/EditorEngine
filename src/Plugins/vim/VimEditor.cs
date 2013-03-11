@@ -370,6 +370,10 @@ namespace vim
 				.ToArray();
 		}
 
+		public void RunCommand(string[] args)
+        {
+        }
+        
 		private void handleModifications()
 		{
 			var modifications = new List<string>();

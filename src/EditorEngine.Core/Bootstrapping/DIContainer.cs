@@ -33,7 +33,8 @@ namespace EditorEngine.Core.Bootstrapping
 						new RemoveHandler(_dispatcher),
 						new ReplaceHandler(_dispatcher),
 						new RefactorHandler(_dispatcher),
-						dirtyFilesHandler
+						dirtyFilesHandler,
+						new EditorCommandHandler(_dispatcher)
 					});
 			_dispatcher.Register<CommandMessage>(commandDispatcher);
 			_dispatcher.Register<EditorDirtyFilesListMessage>(dirtyFilesHandler);
@@ -48,6 +49,7 @@ namespace EditorEngine.Core.Bootstrapping
 			_dispatcher.Register<EditorReplaceMessage>(editorDispatcher);
 			_dispatcher.Register<EditorRefactorMessage>(editorDispatcher);
 			_dispatcher.Register<EditorGetDirtyFilesMessage>(editorDispatcher);
+			_dispatcher.Register<EditorCommandMessage>(editorDispatcher);
 		}
 
 		public void Register<T>(IConsumerOf<T> consumer) where T : Message

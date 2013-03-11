@@ -19,7 +19,8 @@ namespace EditorEngine.Core.Editors
 		IConsumerOf<EditorRemoveMessage>,
 		IConsumerOf<EditorReplaceMessage>,
 		IConsumerOf<EditorRefactorMessage>,
-		IConsumerOf<EditorGetDirtyFilesMessage>
+		IConsumerOf<EditorGetDirtyFilesMessage>,
+		IConsumerOf<EditorCommandMessage>
 	{
 		private object _padlock = new object();
 		private IEditor _editor = null;
@@ -189,6 +190,11 @@ namespace EditorEngine.Core.Editors
 				new EditorDirtyFilesListMessage(
 					message.Message,
 					_editor.GetDirtyFiles(file)));
+		}
+
+		public void Consume(EditorCommandMessage message)
+		{
+			_editor.RunCommand(message.Arguments);
 		}
 	}
 }

@@ -114,6 +114,10 @@ namespace configured
 			return new KeyValuePair<string,string>[] {};
 		}
 
+        public void RunCommand(string[] args)
+        {
+        }
+
         private void tryOpenConfiguration()
         {
             try

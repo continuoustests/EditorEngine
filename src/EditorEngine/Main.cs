@@ -32,7 +32,6 @@ namespace EditorEngine
 				var shutdownConsumer = new ShutdownConsumer();
 				Bootstrapper.Register<ShutdownMessage>(shutdownConsumer);
 				shutdownConsumer.Shutdown += HandleShutdownConsumerShutdown;
-				Console.WriteLine("Application running using key path {0}", key);
 				while (!_shutdown)
 					Thread.Sleep(100);
 			}

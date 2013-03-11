@@ -146,6 +146,10 @@ namespace sublime
 			return buffers.ToArray();
 		}
 
+		public void RunCommand(string[] args)
+        {
+        }
+
 		private string writeInvite(Process proc) {
 			var existing = Process
 				.GetProcesses()
