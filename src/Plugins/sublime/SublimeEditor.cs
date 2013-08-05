@@ -14,6 +14,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using EditorEngine.Core.Logging;
 
 namespace sublime
 {
@@ -28,10 +29,13 @@ namespace sublime
 		public bool IsAlive { 
 			get {
 				try {
+					Logger.Write("Checking initialized");
 					if (!_initialized)
 						return true;
+					Logger.Write("Polling  if editor is alive");
 					return request("ping") == "pong";
 				} catch {
+					Logger.Write("Exception occured");
 					Thread.Sleep(100);
 					try {
 						return request("ping") == "pong";
@@ -153,9 +157,14 @@ namespace sublime
 		private string writeInvite(Process proc) {
 			var existing = Process
 				.GetProcesses()
-				.FirstOrDefault(x => 
-					x.ProcessName.Contains(_launchCommand.Executable) &&
-					File.Exists(Path.Combine(Path.GetTempPath(), "sublime_invite." + x.Id.ToString())));
+				.FirstOrDefault(x => {
+					try {
+						return x.ProcessName.Contains(_launchCommand.Executable) &&
+							File.Exists(Path.Combine(Path.GetTempPath(), "sublime_invite." + x.Id.ToString()));
+					} catch {
+						return false;
+					}
+				});
 			if (existing != null)
 				return Path.Combine(Path.GetTempPath(), "sublime_invite." + existing.Id.ToString());
 			
@@ -243,9 +252,16 @@ namespace sublime
 		}
 
 		private bool isSublimeRunning() {
+			var filename = Path.GetFileName(_launchCommand.Executable);
 			return Process
 				.GetProcesses()
-				.Any(x => x.ProcessName.Contains(_launchCommand.Executable));
+				.Any(x => {
+						try {
+							return x.ProcessName.Contains(filename);
+						} catch {
+							return false;
+						}
+				});
 		}
 
 		private bool isRooted(string path) {
