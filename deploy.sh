@@ -42,3 +42,4 @@ cp -r $SOURCEDIR/Plugins/configured/Configurations/ultraedit.editor $DEPLOYDIR/p
 cp -r $BINARYDIR/sublime.dll $DEPLOYDIR/plugins
 cp -r $SOURCEDIR/Plugins/sublime/sublime.editor $DEPLOYDIR/plugins
 cp -r $BINARYDIR/test.dll $DEPLOYDIR/plugins
+cp $SOURCEDIR/editor.oicfgoptions $DEPLOYDIR/

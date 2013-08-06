@@ -37,3 +37,4 @@ xcopy %SRC%\Plugins\configured\Configurations\ultraedit.editor %DEPLOYDIR%\plugi
 xcopy %BINARYDIR%\sublime.dll %DEPLOYDIR%\plugins\
 xcopy %SRC%\Plugins\Sublime\sublime.editor %DEPLOYDIR%\plugins\
 xcopy %BINARYDIR%\test.dll %DEPLOYDIR%\plugins\
+xcopy %SRC%\editor.oicfgoptions %DEPLOYDIR%\
