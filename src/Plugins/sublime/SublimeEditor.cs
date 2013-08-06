@@ -247,6 +247,13 @@ namespace sublime
 					_launchCommand.Parameter += " --add \"" + sublimeProject + "\"";
 				}
 			}
+			var executable = args
+				.Where(x => x.Key == "--editor.sublime.executable")
+				.Select(x => x.Value)
+				.FirstOrDefault();
+			if (executable != null) {
+				_launchCommand.OverrideExecutable(executable);
+			}
 			if (isSublimeRunning())
 				_launchCommand.Parameter += " -n";
 		}
@@ -296,5 +303,9 @@ namespace sublime
             Executable = exe;
             Parameter = cmd;
         }
+		
+		public void OverrideExecutable(string executable) {
+			Executable = executable;
+		}	
     }
 }

@@ -11,6 +11,7 @@ using EditorEngine.Core.Logging;
 using EditorEngine.Core.Messaging.Messages;
 using System.Collections.Generic;
 using System.Reflection;
+using EditorEngine.Core.Arguments;
 namespace vim
 {
 	public class Buffer
@@ -104,7 +105,7 @@ namespace vim
 			_server.ClientConnected += Handle_serverClientConnected;
 			_server.Start();
 			Logger.Write("Server started and running on port {0}", _server.Port);
-			_executable = getExecutable();
+			_executable = getExecutable(args);
 			_parameters = getParameters();
 			if (_process != null)
 				_process.Kill();
@@ -128,10 +129,18 @@ namespace vim
 			timer.Enabled = true;
 		}
 		
-		private string getExecutable()
+		private string getExecutable(string[] arguments)
 		{
 			try
 			{
+				var args = ArgumentParser.Parse(arguments);
+				var executable = args
+					.Where(x => x.Key == "--editor.vim.executable")
+					.Select(x => x.Value)
+					.FirstOrDefault();
+				if (executable != null)
+					return executable;
+				
 				var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 				return File.ReadAllText(Path.Combine(path, "vim.executable"))
 					.Replace(Environment.NewLine, "");
