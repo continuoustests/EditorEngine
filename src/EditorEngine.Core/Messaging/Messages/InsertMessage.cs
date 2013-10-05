@@ -22,16 +22,18 @@ namespace EditorEngine.Core.Messaging.Messages
 		{
 			if (argument.Length < 2)
 				return null;
-			if (!File.Exists(argument[0]))
-				return null;
+			
 			var goTo = new PositionArgumentParser().Parse(argument[1]);
 			if (goTo == null)
 				return null;
 			if (!File.Exists(goTo.File))
 				return null;
-			var content = File.ReadAllText(argument[0]);
-			if (content.EndsWith(Environment.NewLine))
-				content = content.Substring(0, content.Length - Environment.NewLine.Length);
+			var content = argument[0];
+			if (File.Exists(argument[0])) {
+				content = File.ReadAllText(argument[0]);
+				if (content.EndsWith(Environment.NewLine))
+					content = content.Substring(0, content.Length - Environment.NewLine.Length);
+			}
 			Position moveOffset = null;
 			if (argument.Length > 2)
 				moveOffset = Position.Parse(argument[2]);
