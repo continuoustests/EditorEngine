@@ -24,9 +24,13 @@ namespace EditorEngine.Core.Messaging.Messages
 
 			if (!File.Exists(argument[0]))
 				return null;
-			var content = File.ReadAllText(argument[0]);
-			if (content.EndsWith(Environment.NewLine))
-				content = content.Substring(0, content.Length - Environment.NewLine.Length);
+
+			var content = argument[0];
+			if (File.Exists(argument[0])) {
+				content = File.ReadAllText(argument[0]);
+				if (content.EndsWith(Environment.NewLine))
+					content = content.Substring(0, content.Length - Environment.NewLine.Length);
+			}
 			
 			var goTo = new PositionArgumentParser().Parse(argument[1]);
 			if (goTo == null)
