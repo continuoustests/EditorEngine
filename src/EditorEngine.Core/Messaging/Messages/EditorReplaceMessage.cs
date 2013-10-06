@@ -22,9 +22,6 @@ namespace EditorEngine.Core.Messaging.Messages
 			if (argument.Length != 3)
 				return null;
 
-			if (!File.Exists(argument[0]))
-				return null;
-
 			var content = argument[0];
 			if (File.Exists(argument[0])) {
 				content = File.ReadAllText(argument[0]);

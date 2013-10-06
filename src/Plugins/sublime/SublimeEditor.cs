@@ -101,7 +101,6 @@ namespace sublime
 		}
 
 		public bool CanInsertFor(string file) {
-			Console.WriteLine(file);
 			return true;
 		}
 		
@@ -128,7 +127,6 @@ namespace sublime
 				msg.Start.Column,
 				msg.End.Line,
 				msg.End.Column);
-			Console.WriteLine(message);
 			send(message);
 		}
 
