@@ -23,6 +23,7 @@ namespace sublime
 		private Command _launchCommand = null;
 		private int _port = 9998;
 		private bool _initialized = false;
+        private DateTime _startupGraceTime = DateTime.MinValue;
 		public ICommandEndpoint Publisher { private get; set; }
 		
 		// Is the editor still running?
@@ -30,8 +31,8 @@ namespace sublime
 			get {
 				try {
 					Logger.Write("Checking initialized");
-					if (!_initialized)
-						return true;
+					if (_startupGraceTime > DateTime.Now)
+                        return true;
 					Logger.Write("Polling  if editor is alive");
 					return request("ping") == "pong";
 				} catch {
@@ -55,25 +56,7 @@ namespace sublime
                 _launchCommand.Executable,
                 _launchCommand.Parameter,
                 true);
-            var file = writeInvite(proc);
-            System.Threading.ThreadPool
-            	.QueueUserWorkItem(
-            		(m) => {
-            			var invite = m.ToString();
-            			while (true) {
-            				try {
-            					var content = File.ReadAllText(invite);
-            					if (content.Length > 0) {
-            						_port = int.Parse(content);
-            						break;
-            					}
-        					} catch {
-        					}
-        					System.Threading.Thread.Sleep(100);
-            			}
-            			_initialized = true;
-            			System.Threading.Thread.Sleep(100);
-            		}, file);
+            _startupGraceTime = DateTime.Now.AddSeconds(5);
 		}
 		
 		public void SetFocus() {
@@ -151,27 +134,6 @@ namespace sublime
 		public void RunCommand(string[] args)
         {
         }
-
-		private string writeInvite(Process proc) {
-			var existing = Process
-				.GetProcesses()
-				.FirstOrDefault(x => {
-					try {
-						return x.ProcessName.Contains(_launchCommand.Executable) &&
-							File.Exists(Path.Combine(Path.GetTempPath(), "sublime_invite." + x.Id.ToString()));
-					} catch {
-						return false;
-					}
-				});
-			if (existing != null)
-				return Path.Combine(Path.GetTempPath(), "sublime_invite." + existing.Id.ToString());
-			
-			var file = Path.Combine(Path.GetTempPath(), "sublime_invite." + proc.Id.ToString());
-			if (File.Exists(file))
-				File.Delete(file);
-			File.WriteAllText(file, "");
-			return file;
-		}
 
 		private void send(string msg) {
 			var server = connect();
