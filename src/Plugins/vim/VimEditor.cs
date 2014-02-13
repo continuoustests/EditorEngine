@@ -202,6 +202,10 @@ namespace vim
 		public void SetFocus()
 		{
 			send("0:raise!0");
+			// This is so dirty. Look away, I feel so ashamed....
+			if (Environment.OSVersion.Platform == PlatformID.Unix) {
+				Process.Start("oi", "process set-to-foreground process \"" + _process.Id.ToString() + "\"");
+			}
 		}
 
 		public void GoTo(Location location)
