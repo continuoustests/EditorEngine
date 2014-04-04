@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using EditorEngine.Core.Endpoints;
+using EditorEngine.Core.CommandBuilding;
 using EditorEngine.Core.Messaging.Messages;
 using EditorEngine.Core.Editors;
 
@@ -87,6 +88,10 @@ namespace test
 		public KeyValuePair<string,string>[] GetDirtyFiles(string file) {
 			return new KeyValuePair<string,string>[] {};
 		}
+
+        public Caret GetCaret() {
+        	return new Caret("", new Position(0, 0), "");
+        }
 
 		private string toMD5(string input)
 		{

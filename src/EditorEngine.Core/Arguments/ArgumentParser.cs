@@ -9,7 +9,7 @@ namespace EditorEngine.Core.Arguments
 		public static List<KeyValuePair<string,string>> Parse(string[] arguments) {
 			var list = new List<KeyValuePair<string,string>>();
 			foreach (var arg in arguments) {
-				var argList = Parse(arg);
+				var argList = Parse("\"" + arg + "\"");
 				if (argList != null)
 					list.AddRange(argList);
 			}
@@ -38,6 +38,14 @@ namespace EditorEngine.Core.Arguments
 						insideQuote = false;
 						continue;
 					}
+
+					if (c == '=')
+					{
+						name = word.Trim();
+						word = "";
+						continue;
+					}
+					
 					word += c.ToString();
 					previous = c;
 					continue;

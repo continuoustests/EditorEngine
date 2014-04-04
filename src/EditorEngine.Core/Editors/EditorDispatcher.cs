@@ -20,7 +20,8 @@ namespace EditorEngine.Core.Editors
 		IConsumerOf<EditorReplaceMessage>,
 		IConsumerOf<EditorRefactorMessage>,
 		IConsumerOf<EditorGetDirtyFilesMessage>,
-		IConsumerOf<EditorCommandMessage>
+		IConsumerOf<EditorCommandMessage>,
+		IConsumerOf<EditorGetCaretMessage>
 	{
 		private object _padlock = new object();
 		private IEditor _editor = null;
@@ -195,6 +196,13 @@ namespace EditorEngine.Core.Editors
 		public void Consume(EditorCommandMessage message)
 		{
 			_editor.RunCommand(message.Arguments);
+		}
+
+		public void Consume(EditorGetCaretMessage message)
+		{
+			_dispatcher.Publish(
+				new EditorCaretMessage(message.Message, _editor.GetCaret()));
+			Logger.Write("Published EditorGetCaretMessage");
 		}
 	}
 }

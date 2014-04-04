@@ -6,8 +6,9 @@ using System.Diagnostics;
 using System.IO;
 using EditorEngine.Core.Endpoints.Tcp;
 using System.Threading;
+using EditorEngine.Core.CommandBuilding;
 using EditorEngine.Core.Endpoints;
-using EditorEngine.Core.Logging;
+using EditorEngine;
 using EditorEngine.Core.Messaging.Messages;
 using System.Collections.Generic;
 using System.Reflection;
@@ -386,6 +387,22 @@ namespace vim
 		public void RunCommand(string[] args)
         {
         }
+
+        public Caret GetCaret()
+        {
+        	Logger.Write("Collection information for GetCaret");
+        	var location = getLocation();
+        	if (location == null)
+        		return new Caret("", new Position(0, 0), "");
+        	var content = getText(location.Buffer.ID);
+			if (content == null)
+				return new Caret("", new Position(0, 0), "");
+			var buffer = _buffers
+				.FirstOrDefault(x => x.ID == location.Buffer.ID);
+			if (buffer == null)
+				return new Caret("", new Position(0, 0), "");
+			return new Caret(buffer.Fullpath, new Position(location.Line, location.Column), content);
+        }
         
 		private void handleModifications()
 		{
@@ -615,6 +632,7 @@ namespace vim
 		private string runFunction(string function, params object[] args)
 		{
 			function = string.Format(function, args);
+			Logger.Write("Running function " + function);
 			ReplyResult reply;
 			lock (_replys)
 			{

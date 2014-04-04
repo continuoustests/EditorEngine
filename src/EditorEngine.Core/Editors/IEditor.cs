@@ -45,6 +45,9 @@ namespace EditorEngine.Core.Editors
 
 		// Runs editor spesific command
 		void RunCommand(string[] args);
+
+		// Gets editor caret
+		Caret GetCaret();	
 	}
 }
 

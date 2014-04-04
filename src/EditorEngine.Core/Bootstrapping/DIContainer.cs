@@ -21,6 +21,7 @@ namespace EditorEngine.Core.Bootstrapping
             _dispatcher = new MessageDispatcher();
 			_endpoint = new CommandEndpoint(_dispatcher);
 			var dirtyFilesHandler = new GetDirtyFilesHandler(_dispatcher, _endpoint);
+			var getCaretHandler = new GetCaretHandler(_dispatcher, _endpoint);
 			var loadEditorHandler = new LoadEditorHandler(_dispatcher, _endpoint);
 			
 			var commandDispatcher = new CommandDispatcher(
@@ -34,10 +35,12 @@ namespace EditorEngine.Core.Bootstrapping
 						new ReplaceHandler(_dispatcher),
 						new RefactorHandler(_dispatcher),
 						dirtyFilesHandler,
-						new EditorCommandHandler(_dispatcher)
+						new EditorCommandHandler(_dispatcher),
+						getCaretHandler
 					});
 			_dispatcher.Register<CommandMessage>(commandDispatcher);
 			_dispatcher.Register<EditorDirtyFilesListMessage>(dirtyFilesHandler);
+			_dispatcher.Register<EditorCaretMessage>(getCaretHandler);
 
 			var editorDispatcher = new EditorDispatcher(new PluginLoader(_endpoint), _dispatcher, null);
 			_dispatcher.Register<EditorLoadMessage>(editorDispatcher);
@@ -50,6 +53,7 @@ namespace EditorEngine.Core.Bootstrapping
 			_dispatcher.Register<EditorRefactorMessage>(editorDispatcher);
 			_dispatcher.Register<EditorGetDirtyFilesMessage>(editorDispatcher);
 			_dispatcher.Register<EditorCommandMessage>(editorDispatcher);
+			_dispatcher.Register<EditorGetCaretMessage>(editorDispatcher);
 		}
 
 		public void Register<T>(IConsumerOf<T> consumer) where T : Message

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using EditorEngine.Core.Editors;
 using EditorEngine.Core.Endpoints;
+using EditorEngine.Core.CommandBuilding;
 using EditorEngine.Core.Messaging.Messages;
 using EditorEngine.Core.Arguments;
 
@@ -14,7 +15,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using EditorEngine.Core.Logging;
+using EditorEngine;
 
 namespace sublime
 {
@@ -30,13 +31,12 @@ namespace sublime
 		public bool IsAlive { 
 			get {
 				try {
-					Logger.Write("Checking initialized");
 					if (_startupGraceTime > DateTime.Now)
                         return true;
-					Logger.Write("Polling  if editor is alive");
 					return request("ping") == "pong";
-				} catch {
+				} catch (Exception ex) {
 					Logger.Write("Exception occured");
+                    Logger.Write(ex);
 					Thread.Sleep(100);
 					try {
 						return request("ping") == "pong";
@@ -52,7 +52,7 @@ namespace sublime
 			appendArguments(args);
 			if (_launchCommand == null)
                 return;
-            var proc = runCommand(
+            runCommand(
                 _launchCommand.Executable,
                 _launchCommand.Parameter,
                 true);
@@ -135,6 +135,16 @@ namespace sublime
         {
         }
 
+        public Caret GetCaret()
+        {
+            var current = request("caret")
+                .Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            var content = 
+                    request("get-buffer-content \"" + current[0] + "\"")
+                        .Replace("||newline||", Environment.NewLine);
+            return new Caret(current[0], new Position(int.Parse(current[1]), int.Parse(current[2])), content);
+        }
+
 		private void send(string msg) {
 			var server = connect();
 	        sendMessage(server, msg + "\n");
@@ -193,6 +203,9 @@ namespace sublime
         }
 
 		private void appendArguments(string[] arguments) {
+            Logger.Write("Sublime arguments:");
+            foreach (var argument in arguments)
+                Logger.Write("\t" + argument);
 			var args = ArgumentParser.Parse(arguments);
 			var sublimeProject = args
 				.Where(p => p.Key == "--editor.sublime.project")
@@ -240,6 +253,7 @@ namespace sublime
         private Process runCommand(string cmd, string parameters, bool visible) {
 			if (cmd == "")
 				return null; 
+            Logger.Write("Running: " + cmd + " " + parameters);
             var process = new Process();
             process.StartInfo = new ProcessStartInfo(cmd, parameters);
             process.StartInfo.CreateNoWindow = visible;

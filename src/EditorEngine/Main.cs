@@ -21,6 +21,8 @@ namespace EditorEngine
 			}
 			if (args.Contains("--logging"))
 				Logger.Enable();
+			if (args.Any(x => x.StartsWith("--logging=")))
+				Logger.Enable(getLogFile(args));
 			startApplication(args[0]);
 		}
 		
@@ -32,6 +34,7 @@ namespace EditorEngine
 				var shutdownConsumer = new ShutdownConsumer();
 				Bootstrapper.Register<ShutdownMessage>(shutdownConsumer);
 				shutdownConsumer.Shutdown += HandleShutdownConsumerShutdown;
+				Logger.Write("Engine started");
 				while (!_shutdown)
 					Thread.Sleep(100);
 			}
@@ -53,6 +56,13 @@ namespace EditorEngine
 		private static void printUsages()
 		{
 			Console.WriteLine("EditorEngine.exe {key}");
+		}
+
+		private static string getLogFile(string[] args)
+		{
+			var setting = args.First(x => x.StartsWith("--logging="));
+			var file = setting.Substring(10, setting.Length - 10);
+			return file;
 		}
 	}
 }

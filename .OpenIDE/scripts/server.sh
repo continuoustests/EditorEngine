@@ -25,7 +25,7 @@ if [ "$2" = "get-command-definitions" ]; then
 	# 	param|"Param description" end
 	# end
 
-	echo "Starts the server listening to src/EditorEngine/bin/AutoTest.Net"
+	echo "Starts the server listening to src/EditorEngine/bin/AutoTest.Net with logging"
 	exit
 fi
 

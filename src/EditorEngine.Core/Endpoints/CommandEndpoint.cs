@@ -24,6 +24,7 @@ namespace EditorEngine.Core.Endpoints
 
 		void Handle_serverIncomingMessage (object sender, MessageArgs e)
 		{
+			Logger.Write("Handling: " + e.Message);
 			var command = new CommandMessage(e.ClientID, e.Message.Trim());
 			_dispatcher.Publish(command);
 			if (!e.Message.Trim().StartsWith("correlationID="))

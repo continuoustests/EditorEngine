@@ -4,6 +4,7 @@ using EditorEngine;
 using EditorEngine.Core.Editors;
 using System.Diagnostics;
 using EditorEngine.Core.Endpoints;
+using EditorEngine.Core.CommandBuilding;
 using EditorEngine.Core.Messaging.Messages;
 
 namespace gedit
@@ -72,6 +73,10 @@ namespace gedit
 		{
 			return new KeyValuePair<string,string>[] {};
 		}
+		
+		public Caret GetCaret() {
+        	return new Caret("", new Position(0, 0), "");
+        }
 
 		private void invoke(string arguments, params object[] args)
 		{

@@ -92,6 +92,10 @@
     <Compile Include="Arguments\ArgumentParser.cs" />
     <Compile Include="Messaging\Messages\EditorCommandMessage.cs" />
     <Compile Include="Commands\Handlers\EditorCommandHandler.cs" />
+    <Compile Include="Commands\Handlers\GetCaretHandler.cs" />
+    <Compile Include="Messaging\Messages\EditorCaretMessage.cs" />
+    <Compile Include="Messaging\Messages\EditorGetCaretMessage.cs" />
+    <Compile Include="Editors\Caret.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

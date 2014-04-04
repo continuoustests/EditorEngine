@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using EditorEngine.Core.Editors;
 using EditorEngine.Core.Endpoints;
+using EditorEngine.Core.CommandBuilding;
 using EditorEngine.Core.Messaging.Messages;
 using System.Diagnostics;
 using System.IO;
@@ -116,6 +117,11 @@ namespace configured
 
         public void RunCommand(string[] args)
         {
+        }
+
+        public Caret GetCaret()
+        {
+            return new Caret("", new Position(0, 0), "");
         }
 
         private void tryOpenConfiguration()

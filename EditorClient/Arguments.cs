@@ -45,7 +45,7 @@ namespace EditorClient
 				if (args[i] == "--request")
 					request = true;
 				else
-					sb.AppendFormat("{0} ", args[i]);
+					sb.AppendFormat("\"{0}\" ", args[i]);
 			}
 			return sb.ToString();
 		}
