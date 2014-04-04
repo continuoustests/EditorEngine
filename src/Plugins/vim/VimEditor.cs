@@ -401,7 +401,7 @@ namespace vim
 				.FirstOrDefault(x => x.ID == location.Buffer.ID);
 			if (buffer == null)
 				return new Caret("", new Position(0, 0), "");
-			return new Caret(buffer.Fullpath, new Position(location.Line, location.Column), content);
+			return new Caret(buffer.Fullpath, new Position(location.Line, location.Column+1), content);
         }
         
 		private void handleModifications()
