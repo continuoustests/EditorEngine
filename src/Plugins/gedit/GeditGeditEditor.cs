@@ -78,6 +78,10 @@ namespace gedit
         	return new Caret("", new Position(0, 0), "");
         }
 
+        public void RequestUserSelection(string identifier, string[] items)
+        {
+        }
+
 		private void invoke(string arguments, params object[] args)
 		{
 			var proc = new Process();

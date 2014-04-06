@@ -124,6 +124,10 @@ namespace configured
             return new Caret("", new Position(0, 0), "");
         }
 
+        public void RequestUserSelection(string identifier, string[] items)
+        {
+        }
+
         private void tryOpenConfiguration()
         {
             try

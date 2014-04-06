@@ -93,6 +93,9 @@ namespace test
         	return new Caret("", new Position(0, 0), "");
         }
 
+        public void RequestUserSelection(string identifier, string[] items) {
+        }
+
 		private string toMD5(string input)
 		{
 		    var md5 = System.Security.Cryptography.MD5.Create();

@@ -145,6 +145,21 @@ namespace sublime
             return new Caret(current[0], new Position(int.Parse(current[1]), int.Parse(current[2])), content);
         }
 
+        public void RequestUserSelection(string identifier, string[] items)
+        {
+            var itemstring = "";
+            foreach (var item in items) {
+                if (itemstring != "")
+                    itemstring += ",";
+                itemstring += item;
+            }
+            send(string.Format(
+                "user-select \"{0}\" \"{1}\"",
+                identifier,
+                itemstring
+            ));
+        }
+
 		private void send(string msg) {
 			var server = connect();
 	        sendMessage(server, msg + "\n");

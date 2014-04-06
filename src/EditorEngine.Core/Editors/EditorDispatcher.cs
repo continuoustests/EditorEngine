@@ -21,7 +21,8 @@ namespace EditorEngine.Core.Editors
 		IConsumerOf<EditorRefactorMessage>,
 		IConsumerOf<EditorGetDirtyFilesMessage>,
 		IConsumerOf<EditorCommandMessage>,
-		IConsumerOf<EditorGetCaretMessage>
+		IConsumerOf<EditorGetCaretMessage>,
+		IConsumerOf<EditorRequestUserSelection>
 	{
 		private object _padlock = new object();
 		private IEditor _editor = null;
@@ -202,7 +203,11 @@ namespace EditorEngine.Core.Editors
 		{
 			_dispatcher.Publish(
 				new EditorCaretMessage(message.Message, _editor.GetCaret()));
-			Logger.Write("Published EditorGetCaretMessage");
+		}
+
+		public void Consume(EditorRequestUserSelection message)
+		{
+			_editor.RequestUserSelection(message.Identifier, message.Items);
 		}
 	}
 }

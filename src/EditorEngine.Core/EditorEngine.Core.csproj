@@ -96,6 +96,8 @@
     <Compile Include="Messaging\Messages\EditorCaretMessage.cs" />
     <Compile Include="Messaging\Messages\EditorGetCaretMessage.cs" />
     <Compile Include="Editors\Caret.cs" />
+    <Compile Include="Messaging\Messages\EditorRequestUserSelection.cs" />
+    <Compile Include="Commands\Handlers\RequestUserSelectionHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

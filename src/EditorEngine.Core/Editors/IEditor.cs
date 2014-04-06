@@ -48,6 +48,9 @@ namespace EditorEngine.Core.Editors
 
 		// Gets editor caret
 		Caret GetCaret();	
+
+		// Popups some type of UI where the user can select between the options
+		void RequestUserSelection(string identifier, string[] items);
 	}
 }
 
