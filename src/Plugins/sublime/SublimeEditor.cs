@@ -90,7 +90,7 @@ namespace sublime
 		public void Insert(EditorInsertMessage msg) {
 			var message = string.Format(
 				"insert \"{0}\" \"{1}\" {2} {3} {4}",
-				msg.Text,
+				msg.Text.Replace(Environment.NewLine, "||newline||"),
 				msg.Destination.File,
 				msg.Destination.Line,
 				msg.Destination.Column,

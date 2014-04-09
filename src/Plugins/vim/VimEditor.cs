@@ -248,6 +248,7 @@ namespace vim
 
 		public void Insert(EditorInsertMessage message)
 		{
+			var origin = getLocation();
 			GoTo(new Location(
 				message.Destination.File,
 				message.Destination.Line,
@@ -259,10 +260,10 @@ namespace vim
 			if (Environment.OSVersion.Platform != PlatformID.Unix &&
 				Environment.OSVersion.Platform != PlatformID.MacOSX)
 				newline = "\\r\\n";
-			var content = runFunction("{0}:getText", location.Buffer.ID);
+			var content = getText(location.Buffer.ID);
 			if (content == null)
 				return;
-			var lines = content.Split(new[] { newline }, StringSplitOptions.None);
+			var lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 			if (lines.Length < location.Line)
 			{
 				Logger.Write("Asked for line {0} but document only contained {1} lines",
@@ -278,25 +279,31 @@ namespace vim
 					line);
 				return;
 			}
+
+			Logger.Write("Line is: " + line);
+			var removeLength = line.Length - message.Destination.Column + 1;
 			var insertColumn = location.Column; // + ((message.Destination.Column - 1) - location.Column);
-			var lineModified =
-				line.Substring(0, insertColumn) +
+			var textModified =
 				message.Text
 					.Replace(Environment.NewLine, newline)
 					.Replace("\"", "\\\"") +
-				line.Substring(insertColumn, line.Length - insertColumn);
-			var length = line.Length;
-			var lastLine = location.Line != lines.Length - 1;
-			if (lastLine)
-				length += newline.Length;
+				line.Substring(insertColumn, removeLength);
+			//send("{0}:remove/0 {1} {2}",
+			//	location.Buffer.ID,
+			//	location.Offset - location.Column,
+			//	length - 1);
+			//send("{0}:insert/0 {1} \"{2}\"",
+			//	location.Buffer.ID,
+			//	location.Offset - location.Column,
+			//	lineModified);
 			send("{0}:remove/0 {1} {2}",
 				location.Buffer.ID,
-				location.Offset - location.Column,
-				length - 1);
+				location.Offset,
+				removeLength);
 			send("{0}:insert/0 {1} \"{2}\"",
 				location.Buffer.ID,
-				location.Offset - location.Column,
-				lineModified);
+				location.Offset,
+				textModified);
 			if (message.MoveOffset != null)
 			{
 				var offsetLocation = new Location(
@@ -308,10 +315,18 @@ namespace vim
 			}
 			else
 			{
+				if (origin == null)
+					return;
+				var originAdjusted = origin.Line;
+				if (origin.Line > message.Destination.Line) {
+					originAdjusted = 
+						origin.Line + 
+						message.Text.Split(new[] {Environment.NewLine}, StringSplitOptions.None).Length;
+				}
 				GoTo(new Location(
-					message.Destination.File,
-					message.Destination.Line,
-					message.Destination.Column + message.Text.Length));
+					origin.Buffer.Fullpath,
+					origin.Line,
+					origin.Column));
 			}
 		}	
 
@@ -343,14 +358,14 @@ namespace vim
 				return;
 			}
 
-			var content = runFunction("{0}:getText", location.Buffer.ID);
+			var content = getText(location.Buffer.ID);
 			if (content == null)
 				return;
 			var newline = "\\n";
 			if (Environment.OSVersion.Platform != PlatformID.Unix &&
 				Environment.OSVersion.Platform != PlatformID.MacOSX)
 				newline = "\\r\\n";
-			var lines = content.Split(new[] { newline }, StringSplitOptions.None);
+			var lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 			for (int line = message.End.Line; line >= message.Start.Line; line--)
 			{
 				var column = 1;
@@ -438,14 +453,14 @@ namespace vim
 		private void completeSnippet(object status)
 		{
 			var location = getLocation();
-			var content = runFunction("{0}:getText", location.Buffer.ID);
+			var content = getText(location.Buffer.ID);
 			if (content == null)
 				return;
 			var newline = "\\n";
 			if (Environment.OSVersion.Platform != PlatformID.Unix &&
 				Environment.OSVersion.Platform != PlatformID.MacOSX)
 				newline = "\\r\\n";
-			var lines = content.Split(new[] { newline }, StringSplitOptions.None);
+			var lines = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 			var line = lines[location.Line - 1];
 			var insertColumn = location.Column + 1; // Add one since command mode jumps one back
 			var word = Word.Extract(line, insertColumn); 
@@ -519,7 +534,7 @@ namespace vim
 			var start = reply.IndexOf(" ");
 			if (start == -1)
 				return "";
-			start += 1;
+			start += 2;
 			if (start == reply.Length)
 				return "";
 			var newline = "\\n";
@@ -527,7 +542,7 @@ namespace vim
 				Environment.OSVersion.Platform != PlatformID.MacOSX)
 				newline = "\\r\\n";
 			return reply
-				.Substring(start, reply.Length - start)
+				.Substring(start, reply.Length - start - 1)
 				.Replace(newline, Environment.NewLine);
 		}
 
