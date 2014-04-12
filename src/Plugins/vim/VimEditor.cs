@@ -282,11 +282,13 @@ namespace vim
 
 			Logger.Write("Line is: " + line);
 			var removeLength = line.Length - message.Destination.Column + 1;
+			if (removeLength > line.Length)
+				removeLength = line.Length;
 			var insertColumn = location.Column; // + ((message.Destination.Column - 1) - location.Column);
 			var textModified =
 				message.Text
-					.Replace(Environment.NewLine, newline)
-					.Replace("\"", "\\\"") +
+					.Replace("\\", "\\\\")
+					.Replace(Environment.NewLine, newline) +
 				line.Substring(insertColumn, removeLength);
 			//send("{0}:remove/0 {1} {2}",
 			//	location.Buffer.ID,
@@ -395,7 +397,7 @@ namespace vim
 				return new KeyValuePair<string,string>[] {};
 			return _buffers
 				.Where(x => !x.Closed && getModified(x.ID) == "1" && (file == null || file.Equals(x.Fullpath)))
-				.Select(x => new KeyValuePair<string,string>(x.Fullpath, getText(x.ID).Trim(new[] {'\"'})))
+				.Select(x => new KeyValuePair<string,string>(x.Fullpath, getText(x.ID)))
 				.ToArray();
 		}
 
@@ -543,7 +545,9 @@ namespace vim
 				newline = "\\r\\n";
 			return reply
 				.Substring(start, reply.Length - start - 1)
-				.Replace(newline, Environment.NewLine);
+				.Replace(newline, Environment.NewLine)
+				.Replace("\\\"", "\"")
+				.Replace("\\\\", "\\");
 		}
 
 		private VIMLocation getLocation()
