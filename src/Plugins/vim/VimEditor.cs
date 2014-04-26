@@ -431,6 +431,11 @@ namespace vim
             }
         	Publisher.Run("user-select unsupported \"" + identifier + "\" \"" + itemList + "\"");	
         }
+
+        public void RequestUserInput(string identifier, string defaultValue)
+        {
+            Publisher.Run("user-input unsupported \"" + identifier + "\" \"" + defaultValue + "\"");   
+        }
         
 		private void handleModifications()
 		{

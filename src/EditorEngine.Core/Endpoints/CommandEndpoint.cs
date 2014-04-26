@@ -83,7 +83,7 @@ namespace EditorEngine.Core.Endpoints
 		{
 			if (OS.IsOSX)
 				return "/tmp";
-			return FS.GetTempDir();
+			return Path.GetTempPath();
 		}
 	}
 

@@ -82,6 +82,11 @@ namespace gedit
         {
         }
 
+        public void RequestUserInput(string identifier, string defaultValue)
+        {
+            Publisher.Run("user-select unsupported \"" + identifier + "\" \"" + defaultValue + "\"");   
+        }
+
 		private void invoke(string arguments, params object[] args)
 		{
 			var proc = new Process();

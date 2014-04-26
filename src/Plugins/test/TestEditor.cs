@@ -96,6 +96,9 @@ namespace test
         public void RequestUserSelection(string identifier, string[] items) {
         }
 
+        public void RequestUserInput(string identifier, string defaultValue) {
+        }
+
 		private string toMD5(string input)
 		{
 		    var md5 = System.Security.Cryptography.MD5.Create();

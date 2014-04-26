@@ -37,7 +37,8 @@ namespace EditorEngine.Core.Bootstrapping
 						dirtyFilesHandler,
 						new EditorCommandHandler(_dispatcher),
 						getCaretHandler,
-						new RequestUserSelectionHandler(_dispatcher)
+						new RequestUserSelectionHandler(_dispatcher),
+						new RequestUserInputHandler(_dispatcher)
 					});
 			_dispatcher.Register<CommandMessage>(commandDispatcher);
 			_dispatcher.Register<EditorDirtyFilesListMessage>(dirtyFilesHandler);
@@ -56,6 +57,7 @@ namespace EditorEngine.Core.Bootstrapping
 			_dispatcher.Register<EditorCommandMessage>(editorDispatcher);
 			_dispatcher.Register<EditorGetCaretMessage>(editorDispatcher);
 			_dispatcher.Register<EditorRequestUserSelection>(editorDispatcher);
+			_dispatcher.Register<EditorRequestUserInput>(editorDispatcher);
 		}
 
 		public void Register<T>(IConsumerOf<T> consumer) where T : Message

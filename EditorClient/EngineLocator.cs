@@ -65,7 +65,7 @@ namespace EditorClient
 		{
 			if (OS.IsOSX)
 				return "/tmp";
-			return FS.GetTempDir();
+			return Path.GetTempPath();
 		}
 	}
 

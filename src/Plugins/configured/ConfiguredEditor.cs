@@ -126,6 +126,18 @@ namespace configured
 
         public void RequestUserSelection(string identifier, string[] items)
         {
+            var itemList = "";
+            foreach (var item in items) {
+                if (itemList != "")
+                    itemList += ",";
+                itemList += item;
+            }
+            Publisher.Run("user-select unsupported \"" + identifier + "\" \"" + itemList + "\"");   
+        }
+
+        public void RequestUserInput(string identifier, string defaultValue)
+        {
+            Publisher.Run("user-select unsupported \"" + identifier + "\" \"" + defaultValue + "\"");   
         }
 
         private void tryOpenConfiguration()

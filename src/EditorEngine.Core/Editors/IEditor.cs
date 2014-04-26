@@ -51,6 +51,9 @@ namespace EditorEngine.Core.Editors
 
 		// Popups some type of UI where the user can select between the options
 		void RequestUserSelection(string identifier, string[] items);
+
+		// Popups some type of UI where the user can input text
+		void RequestUserInput(string identifier, string defaultValue);
 	}
 }
 

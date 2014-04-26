@@ -160,6 +160,15 @@ namespace sublime
             ));
         }
 
+        public void RequestUserInput(string identifier, string defaultValue)
+        {
+            send(string.Format(
+                "user-input \"{0}\" \"{1}\"",
+                identifier,
+                defaultValue
+            ));
+        }
+
 		private void send(string msg) {
 			var server = connect();
 	        sendMessage(server, msg + "\n");
