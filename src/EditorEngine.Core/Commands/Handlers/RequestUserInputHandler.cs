@@ -20,9 +20,10 @@ namespace EditorEngine.Core.Commands.Handlers
         {
             Logger.Write("Hanlind use request message with " + message.Arguments.Count.ToString() + " arguments");
             var arguments = message.Arguments;
-            if (arguments.Count != 2)
-                return;
-            _dispatcher.Publish(new EditorRequestUserInput(arguments[0], arguments[1]));
+            var defaultvalue = "";
+            if (arguments.Count > 1)
+                defaultvalue = arguments[1];
+            _dispatcher.Publish(new EditorRequestUserInput(arguments[0], defaultvalue));
         }
     }
 }
