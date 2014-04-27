@@ -69,7 +69,7 @@ namespace EditorEngine.Core.Endpoints
 		}
 	}
 
-	class FS
+	public class FS
 	{
 		public static string GetTempFilePath()
 		{

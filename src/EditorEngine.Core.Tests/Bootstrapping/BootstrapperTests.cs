@@ -8,6 +8,8 @@ using System.Linq;
 using EditorEngine.Core.Tests.Endpoints.Tcp;
 using EditorEngine.Core.Tests.Messaging;
 using System.Threading;
+using EditorEngine.Core.Endpoints;
+
 namespace EditorEngine.Core.Tests
 {
 	[TestFixture]
@@ -32,7 +34,7 @@ namespace EditorEngine.Core.Tests
 		
 		private int getPort(string guid)
 		{
-			return Directory.GetFiles(Path.Combine(Path.GetTempPath(), "EditorEngine"))
+			return Directory.GetFiles(Path.Combine(FS.GetTempDir(), "EditorEngine"))
 				.Where(file => File.ReadAllLines(file)[0].Equals(guid))
 				.Select(file => int.Parse(File.ReadAllLines(file)[1]))
 				.First();
