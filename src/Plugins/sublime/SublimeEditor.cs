@@ -31,7 +31,7 @@ namespace sublime
 		public bool IsAlive { 
 			get {
 				try {
-					if (_startupGraceTime > DateTime.Now)
+					if (_startupGraceTime == DateTime.MinValue || _startupGraceTime > DateTime.Now)
                         return true;
 					return request("ping") == "pong";
 				} catch (Exception ex) {
@@ -41,6 +41,7 @@ namespace sublime
 					try {
 						return request("ping") == "pong";
 					} catch {
+						Logger.Write("Failed to receive ping response a second time. Exiting");
 						return false;
 					}
 				}
@@ -56,6 +57,7 @@ namespace sublime
                 _launchCommand.Executable,
                 _launchCommand.Parameter,
                 true);
+            Logger.Write("sublime started");
             _startupGraceTime = DateTime.Now.AddSeconds(5);
 		}
 		
@@ -203,8 +205,11 @@ namespace sublime
 		}
 
 		private void close(Socket server) {
-			server.Shutdown(SocketShutdown.Both);
-			server.Close();
+			try {
+				server.Shutdown(SocketShutdown.Both);
+				server.Close();
+			} catch {
+			}
 		}
 
         private void openConfiguration() {

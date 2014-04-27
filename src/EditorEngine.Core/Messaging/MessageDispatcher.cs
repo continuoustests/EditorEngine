@@ -52,6 +52,7 @@ namespace EditorEngine.Core.Messaging
 		
 		private void publish<T>(IConsumerOf<T> consumer, T message) where T : Message
 		{
+			Logger.Write("Dispatching to " + consumer.GetType().ToString() + " " + message.GetType().ToString());
 			ThreadPool.QueueUserWorkItem((state) => { consumer.Consume(message); }); 
 		}
 	}

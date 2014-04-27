@@ -92,6 +92,7 @@ namespace EditorEngine.Core.Editors
 		
 		public void Consume(EditorLoadMessage message)
 		{
+			Logger.Write("loading editor");
 			if (_editor == null)
 			{
 				_editor = _pluginFactory.Load(message.Editor);
