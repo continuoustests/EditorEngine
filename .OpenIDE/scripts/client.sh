@@ -29,4 +29,8 @@ if [ "$2" = "get-command-definitions" ]; then
 	exit
 fi
 
-mono --debug ReleaseBinaries/EditorClient.exe src/EditorEngine/bin/AutoTest.Net "${@:4}"
+options=""
+if [ "$4" == "editor" ]; then
+	options=$(oi conf read editor.*|grep executable|sed s/editor./--editor./g)
+fi
+mono --debug ReleaseBinaries/EditorClient.exe src/EditorEngine/bin/AutoTest.Net "${@:4}" $options
