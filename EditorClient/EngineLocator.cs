@@ -30,7 +30,7 @@ namespace EditorClient
 			var dir = Path.Combine(FS.GetTempDir(), "EditorEngine");
 			if (Directory.Exists(dir))
 			{
-				foreach (var file in Directory.GetFiles(Path.Combine(Path.GetTempPath(), "EditorEngine"), "*.pid"))
+				foreach (var file in Directory.GetFiles(Path.Combine(FS.GetTempDir(), "EditorEngine"), "*.pid"))
 				{
 					var instance = Instance.Get(file, File.ReadAllLines(file));
 					if (instance != null)
