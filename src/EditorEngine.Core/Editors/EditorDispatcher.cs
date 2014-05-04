@@ -72,7 +72,11 @@ namespace EditorEngine.Core.Editors
 			lock (_padlock)
 			{
 				if (_editor == null) return;
-				invocation.Invoke();
+				try {
+					invocation.Invoke();
+				} catch (Exception ex) {
+					Logger.Write(ex);
+				}
 			}
 		}
 		
@@ -95,16 +99,20 @@ namespace EditorEngine.Core.Editors
 			Logger.Write("loading editor");
 			if (_editor == null)
 			{
-				_editor = _pluginFactory.Load(message.Editor);
-				if (_editor == null) {
-					_dispatcher.Publish(new EditorLoadedMessage(message.Message, ""));
-					return;
+				try {
+					_editor = _pluginFactory.Load(message.Editor);
+					if (_editor == null) {
+						_dispatcher.Publish(new EditorLoadedMessage(message.Message, ""));
+						return;
+					}
+					var args = new string[] {};
+					if (message.Message.Arguments != null)
+						args = 	message.Message.Arguments.ToArray();
+					_editor.Initialize(null, args);
+					_dispatcher.Publish(new EditorLoadedMessage(message.Message, message.Editor));
+				} catch (Exception ex) {
+					Logger.Write(ex);
 				}
-				var args = new string[] {};
-				if (message.Message.Arguments != null)
-					args = 	message.Message.Arguments.ToArray();
-				_editor.Initialize(null, args);
-				_dispatcher.Publish(new EditorLoadedMessage(message.Message, message.Editor));
 			}
 		}
 		
