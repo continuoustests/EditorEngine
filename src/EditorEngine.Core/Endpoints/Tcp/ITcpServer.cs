@@ -19,8 +19,10 @@ namespace EditorEngine.Core.Endpoints.Tcp
 		event EventHandler<MessageArgs> IncomingMessage;
 		
 		int Port { get; }
+		int ConnectedClients { get; }
 		
 		void Start();
+		void Start(int port);
 		void Send(string message);
 		void Send(string message, Guid clientID);
 	}

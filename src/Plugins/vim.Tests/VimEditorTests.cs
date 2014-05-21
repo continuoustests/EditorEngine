@@ -262,12 +262,19 @@ namespace vim.Tests
 		}
 		
 		public int Port { get { return 5566; } }
+
+		public int ConnectedClients { get { return 0; } }
 		
 		public event EventHandler ClientConnected;
 
 		public event EventHandler<MessageArgs> IncomingMessage;
 
 		public void Start()
+		{
+		}
+
+
+		public void Start(int port)
 		{
 		}
 

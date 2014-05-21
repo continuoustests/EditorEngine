@@ -67,6 +67,8 @@ namespace vim
 		private string _parameters = null;
 		private int _functrionTimeout = 2000;
 		private Queue<string> _modifications = new Queue<string>();
+		private bool _isHeadless = false;
+		private bool _vimSaidExitNow = false;
 		
 		public ITcpServer Server
 		{ 
@@ -92,34 +94,88 @@ namespace vim
 		{
 			get
 			{
-				if (!_isInitialized || _process == null)
+				if (!_isHeadless) {
+					if (!_isInitialized || _process == null)
+						return true;
+					return !_process.HasExited;
+				}
+
+				if (_vimSaidExitNow)
+					return false;
+				if (!_isInitialized && _server.ConnectedClients > 0) {
+					_isInitialized = true;
+				}
+				if (!_isInitialized || _server.ConnectedClients > 0) {
 					return true;
-				return !_process.HasExited;
+				}
+				return false;
 			}
 		}
 		
 		public void Initialize(Location location, string[] args)
 		{
+			var port = getPort(args);
+			_isHeadless = getIsHeadless(args);
 			_server = null;
 			_server = new TcpServer(Environment.NewLine);
 			_server.IncomingMessage += Handle_serverIncomingMessage;
 			_server.ClientConnected += Handle_serverClientConnected;
-			_server.Start();
+			_server.Start(port);
 			Logger.Write("Server started and running on port {0}", _server.Port);
-			_executable = getExecutable(args);
-			_parameters = getParameters();
-			if (_process != null)
-				_process.Kill();
-			_process = new Process();
-			_process.StartInfo = new ProcessStartInfo(_executable, _parameters);
-			_process.StartInfo.CreateNoWindow = true;
-			_process.StartInfo.UseShellExecute = true;
-			_process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-			_process.Start();
-			listenForModifications();
-			Thread.Sleep(500);
-			_isInitialized = true;
-			GoTo(location);
+			if (!_isHeadless) {
+				_executable = getExecutable(args);
+				_parameters = getParameters();
+				if (_process != null)
+					_process.Kill();
+				_process = new Process();
+				_process.StartInfo = new ProcessStartInfo(_executable, _parameters);
+				_process.StartInfo.CreateNoWindow = true;
+				_process.StartInfo.UseShellExecute = true;
+				_process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+				_process.Start();
+				listenForModifications();
+				Thread.Sleep(500);
+				_isInitialized = true;
+				GoTo(location);
+			}
+		}
+
+		private int getPort(string[] arguments)
+		{
+			try
+			{
+				var args = ArgumentParser.Parse(arguments);
+				var port = args
+					.Where(x => x.Key == "--editor.vim.port")
+					.Select(x => x.Value)
+					.FirstOrDefault();
+				if (port != null)
+					return int.Parse(port);
+				return 0;
+			}
+			catch
+			{
+				return 0;
+			}
+		}
+
+		private bool getIsHeadless(string[] arguments)
+		{
+			try
+			{
+				var args = ArgumentParser.Parse(arguments);
+				var isHeadless = args
+					.Where(x => x.Key == "--editor.vim.headless")
+					.Select(x => x.Value)
+					.FirstOrDefault();
+				if (isHeadless != null)
+					return isHeadless.ToLower() == "true";
+				return false;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		private void listenForModifications()
@@ -176,7 +232,9 @@ namespace vim
 			Logger.Write("Recieving: " +  e.Message);
 			if (handleReply(e.Message))
 				return;
-			if (getCommand(e.Message).StartsWith("keyAtPos=0 \"snippet-complete\""))
+			if (e.Message == "0:disconnect=0")
+				_vimSaidExitNow = true;
+			else if (getCommand(e.Message).StartsWith("keyAtPos=0 \"snippet-complete\""))
 				ThreadPool.QueueUserWorkItem(completeSnippet);
 			else if (getCommand(e.Message).StartsWith("keyAtPos=0 \""))
 				Publisher.Run(getCommand(e.Message)
@@ -204,7 +262,7 @@ namespace vim
 		{
 			send("0:raise!0");
 			// This is so dirty. Look away, I feel so ashamed....
-			if (Environment.OSVersion.Platform == PlatformID.Unix) {
+			if (!_isHeadless && Environment.OSVersion.Platform == PlatformID.Unix) {
 				Process.Start("oi", "process set-to-foreground process \"" + _process.Id.ToString() + "\"");
 			}
 		}

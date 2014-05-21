@@ -33,6 +33,8 @@ namespace EditorEngine.Core.Endpoints.Tcp
 		public event EventHandler<MessageArgs> IncomingMessage;
 		
 		public int Port { get { return _currentPort; } }
+
+        public int ConnectedClients { get { return _clients.Count; } }
 		
 		public TcpServer()
 		{
@@ -43,10 +45,15 @@ namespace EditorEngine.Core.Endpoints.Tcp
 			_messageTermination = messageTermination;
 		}
 		
-		public void Start()
+        public void Start()
+        {
+            Start(0);
+        }
+
+		public void Start(int port)
 		{
             _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            var ipEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 0);
+            var ipEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
             _listener.Bind(ipEndpoint);
             _currentPort = ((IPEndPoint)_listener.LocalEndPoint).Port;
             _listener.Listen(1);
