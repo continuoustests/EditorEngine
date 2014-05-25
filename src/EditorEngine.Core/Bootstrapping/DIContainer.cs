@@ -38,6 +38,7 @@ namespace EditorEngine.Core.Bootstrapping
 						new EditorCommandHandler(_dispatcher),
 						getCaretHandler,
 						new RequestUserSelectionHandler(_dispatcher),
+						new RequestUserSelectionAtCaretHandler(_dispatcher),
 						new RequestUserInputHandler(_dispatcher)
 					});
 			_dispatcher.Register<CommandMessage>(commandDispatcher);
@@ -57,6 +58,7 @@ namespace EditorEngine.Core.Bootstrapping
 			_dispatcher.Register<EditorCommandMessage>(editorDispatcher);
 			_dispatcher.Register<EditorGetCaretMessage>(editorDispatcher);
 			_dispatcher.Register<EditorRequestUserSelection>(editorDispatcher);
+			_dispatcher.Register<EditorRequestUserSelectionAtCaret>(editorDispatcher);
 			_dispatcher.Register<EditorRequestUserInput>(editorDispatcher);
 		}
 

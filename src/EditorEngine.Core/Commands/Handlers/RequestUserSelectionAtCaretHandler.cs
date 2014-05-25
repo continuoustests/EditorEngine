@@ -5,13 +5,13 @@ using EditorEngine.Core.Arguments;
 
 namespace EditorEngine.Core.Commands.Handlers
 {
-    class RequestUserSelectionHandler : ICommandHandler
+    class RequestUserSelectionAtCaretHandler : ICommandHandler
     {
         private IMessageDispatcher _dispatcher;
         
-        public string ID { get { return "user-select"; } }
+        public string ID { get { return "user-select-at-caret"; } }
         
-        public RequestUserSelectionHandler(IMessageDispatcher dispatcher)
+        public RequestUserSelectionAtCaretHandler(IMessageDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
@@ -22,10 +22,7 @@ namespace EditorEngine.Core.Commands.Handlers
             var arguments = message.Arguments;
             if (arguments.Count < 2)
                 return;
-            var defaultValue = "";
-            if (arguments.Count == 3)
-                defaultValue = arguments[2];
-            _dispatcher.Publish(new EditorRequestUserSelection(arguments[0], arguments[1], defaultValue));
+            _dispatcher.Publish(new EditorRequestUserSelectionAtCaret(arguments[0], arguments[1]));
         }
     }
 }

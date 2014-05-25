@@ -23,6 +23,7 @@ namespace EditorEngine.Core.Editors
 		IConsumerOf<EditorCommandMessage>,
 		IConsumerOf<EditorGetCaretMessage>,
 		IConsumerOf<EditorRequestUserSelection>,
+		IConsumerOf<EditorRequestUserSelectionAtCaret>,
 		IConsumerOf<EditorRequestUserInput>
 	{
 		private object _padlock = new object();
@@ -217,7 +218,12 @@ namespace EditorEngine.Core.Editors
 
 		public void Consume(EditorRequestUserSelection message)
 		{
-			editor(() => _editor.RequestUserSelection(message.Identifier, message.Items));
+			editor(() => _editor.RequestUserSelection(message.Identifier, message.Items, message.DefaultValue));
+		}
+
+		public void Consume(EditorRequestUserSelectionAtCaret message)
+		{
+			editor(() => _editor.RequestUserSelectionAtCaret(message.Identifier, message.Items));
 		}
 
 		public void Consume(EditorRequestUserInput message)

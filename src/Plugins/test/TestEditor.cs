@@ -93,7 +93,11 @@ namespace test
         	return new Caret("", new Position(0, 0), "");
         }
 
-        public void RequestUserSelection(string identifier, string[] items) {
+        public void RequestUserSelection(string identifier, string[] items, string defaultValue) {
+        }
+
+        public void RequestUserSelectionAtCaret(string identifier, string[] items)
+        {
         }
 
         public void RequestUserInput(string identifier, string defaultValue) {

@@ -147,7 +147,7 @@ namespace sublime
             return new Caret(current[0], new Position(int.Parse(current[1]), int.Parse(current[2])), content);
         }
 
-        public void RequestUserSelection(string identifier, string[] items)
+        public void RequestUserSelection(string identifier, string[] items, string defaultValue)
         {
             var itemstring = "";
             foreach (var item in items) {
@@ -156,7 +156,23 @@ namespace sublime
                 itemstring += item;
             }
             send(string.Format(
-                "user-select \"{0}\" \"{1}\"",
+                "user-select \"{0}\" \"{1}\" \"{2}\"",
+                identifier,
+                itemstring,
+                defaultValue
+            ));
+        }
+
+        public void RequestUserSelectionAtCaret(string identifier, string[] items)
+        {
+            var itemstring = "";
+            foreach (var item in items) {
+                if (itemstring != "")
+                    itemstring += ",";
+                itemstring += item;
+            }
+            send(string.Format(
+                "user-select-at-caret \"{0}\" \"{1}\"",
                 identifier,
                 itemstring
             ));
