@@ -18,9 +18,12 @@ namespace EditorEngine.Core.Editors
 		
 		// Set the editor window as active window
 		void SetFocus();
-		
+
 		// Have the editor go to / open a file at the specified location
 		void GoTo(Location location);
+		
+		// Have the editor go to / open a file at the specified location
+		void GoTo(Location location, string window);
 
 		// A batch of commands is about to be sent to the editor
 		void BeginBatchUpdate();
@@ -55,8 +58,11 @@ namespace EditorEngine.Core.Editors
 		// Popups some type of UI where the user can input text
 		void RequestUserInput(string identifier, string defaultValue);
 
-		// Popups some type of UI at caret where the user can select between the options
+        // Popup a window at the caret
 		void RequestUserSelectionAtCaret(string identifier, string[] items);
+
+        // Get available windows in editor
+        string[] GetWindows();
 	}
 }
 

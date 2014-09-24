@@ -269,6 +269,11 @@ namespace vim
 
 		public void GoTo(Location location)
 		{
+			GoTo(location, null);
+		}
+		
+		public void GoTo(Location location, string window)
+		{
 			if (location == null)
 				return;
 			var id = getBufferID(location.File);
@@ -504,6 +509,14 @@ namespace vim
         public void RequestUserInput(string identifier, string defaultValue)
         {
             Publisher.Run("user-input unsupported \"" + identifier + "\" \"" + defaultValue + "\"");   
+        }
+
+        public string[] GetWindows()
+        {
+            return new[] {
+                "Window1",
+                "Window1"
+            };
         }
         
 		private void handleModifications()

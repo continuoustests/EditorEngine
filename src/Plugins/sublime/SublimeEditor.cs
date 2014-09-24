@@ -69,13 +69,18 @@ namespace sublime
                 "",
                 true);
 		}
+
+        public void GoTo(Location location) {
+            GoTo(location, null);
+        }
 		
-		public void GoTo(Location location) {
+		public void GoTo(Location location, string window) {
 			var msg = string.Format(
-				"goto \"{0}\" {1} {2}",
+				"goto \"{0}\" {1} {2} {3}",
 				location.File,
 				location.Line,
-				location.Column);
+				location.Column,
+                window);
 			send(msg);
 		}
 
@@ -185,6 +190,12 @@ namespace sublime
                 identifier,
                 defaultValue
             ));
+        }
+
+        public string[] GetWindows()
+        {
+            return request("get-windows")
+                .Split(new[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
         }
 
 		private void send(string msg) {

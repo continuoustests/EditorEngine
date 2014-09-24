@@ -1,5 +1,6 @@
 using System;
 using EditorEngine.Core.CommandBuilding;
+
 namespace EditorEngine.Core.Editors
 {
 	public class Location

@@ -30,7 +30,9 @@ namespace EditorEngine.Core.Commands.Handlers
 			var location = getLocation(arguments[0]);
 			if (location == null)
 				return;
-			_dispatcher.Publish(new EditorGoToMessage(location.File, location.Line, location.Column));
+			_dispatcher.Publish(
+				new EditorGoToMessage(location.File, location.Line, location.Column, location.Window)
+			);
 		}
 		
 		private GoTo getLocation(string arguments)

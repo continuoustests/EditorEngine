@@ -24,7 +24,8 @@ namespace EditorEngine.Core.Editors
 		IConsumerOf<EditorGetCaretMessage>,
 		IConsumerOf<EditorRequestUserSelection>,
 		IConsumerOf<EditorRequestUserSelectionAtCaret>,
-		IConsumerOf<EditorRequestUserInput>
+		IConsumerOf<EditorRequestUserInput>,
+		IConsumerOf<EditorGetWindowsMessage>
 	{
 		private object _padlock = new object();
 		private IEditor _editor = null;
@@ -119,7 +120,7 @@ namespace EditorEngine.Core.Editors
 		
 		public void Consume(EditorGoToMessage message)
 		{
-			editor(() => _editor.GoTo(new Location(message.File, message.Line, message.Column)));
+			editor(() => _editor.GoTo(new Location(message.File, message.Line, message.Column), message.Window));
 			editor(() => _editor.SetFocus());
 		}
 		
@@ -229,6 +230,14 @@ namespace EditorEngine.Core.Editors
 		public void Consume(EditorRequestUserInput message)
 		{
 			editor(() => _editor.RequestUserInput(message.Identifier, message.DefaultValue));
+		}
+
+		public void Consume(EditorGetWindowsMessage message)
+		{
+			_dispatcher.Publish(
+				new EditorWindowListMessage(
+					message.Message,
+					_editor.GetWindows()));
 		}
 	}
 }

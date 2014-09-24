@@ -102,6 +102,9 @@
     <Compile Include="Messaging\Messages\EditorRequestUserInput.cs" />
     <Compile Include="Commands\Handlers\RequestUserSelectionAtCaretHandler.cs" />
     <Compile Include="Messaging\Messages\EditorRequestUserSelectionAtCaret.cs" />
+    <Compile Include="Commands\Handlers\GetWindowsHandler.cs" />
+    <Compile Include="Messaging\Messages\EditorGetWindowsMessage.cs" />
+    <Compile Include="Messaging\Messages\EditorWindowListMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

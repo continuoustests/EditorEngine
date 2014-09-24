@@ -43,7 +43,11 @@ namespace gedit
 		{
 		}
 		
-		public void GoTo(Location location)
+        public void GoTo(Location location)
+        {
+            GoTo(location, null);
+        }
+		public void GoTo(Location location, string window)
 		{
 			invoke("{0} +{1}", location.File, location.Line);
 		}
@@ -103,6 +107,14 @@ namespace gedit
         public void RequestUserInput(string identifier, string defaultValue)
         {
             Publisher.Run("user-select unsupported \"" + identifier + "\" \"" + defaultValue + "\"");   
+        }
+
+        public string[] GetWindows()
+        {
+            return new[] {
+                "Window 1",
+                "Window 1"
+            };
         }
 
 		private void invoke(string arguments, params object[] args)

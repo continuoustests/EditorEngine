@@ -31,6 +31,10 @@ namespace test
 		
 		// Have the editor go to / open a file at the specified location
 		public void GoTo(Location location) {
+			GoTo(location, null);
+		}
+
+		public void GoTo(Location location, string window) {
 			Publisher.Run(
 				string.Format(
 					"test-editor goto \"{0}|{1}|{2}\"",
@@ -101,6 +105,11 @@ namespace test
         }
 
         public void RequestUserInput(string identifier, string defaultValue) {
+        }
+
+
+		public string[] GetWindows() {
+            return new[] {"Window 1", "Window 1"};
         }
 
 		private string toMD5(string input)

@@ -58,7 +58,7 @@ namespace EditorEngine.Core.Tests.Editors
 		public void Should_go_to_file()
 		{
 			_editor.Stub(x => x.IsAlive).Return(true);
-			_dispatcher.Consume(new EditorGoToMessage("MyFile", 10, 10));
+			_dispatcher.Consume(new EditorGoToMessage("MyFile", 10, 10, null));
 			_editor.AssertWasCalled(method => method.GoTo(null), x => x.IgnoreArguments());
 		}
 		

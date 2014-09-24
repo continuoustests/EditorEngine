@@ -23,6 +23,7 @@ namespace EditorEngine.Core.Bootstrapping
 			var dirtyFilesHandler = new GetDirtyFilesHandler(_dispatcher, _endpoint);
 			var getCaretHandler = new GetCaretHandler(_dispatcher, _endpoint);
 			var loadEditorHandler = new LoadEditorHandler(_dispatcher, _endpoint);
+			var getWindowsHandler = new GetWindowsHandler(_dispatcher, _endpoint);
 			
 			var commandDispatcher = new CommandDispatcher(
 				new ICommandHandler[]
@@ -39,11 +40,13 @@ namespace EditorEngine.Core.Bootstrapping
 						getCaretHandler,
 						new RequestUserSelectionHandler(_dispatcher),
 						new RequestUserSelectionAtCaretHandler(_dispatcher),
-						new RequestUserInputHandler(_dispatcher)
+						new RequestUserInputHandler(_dispatcher),
+						getWindowsHandler,
 					});
 			_dispatcher.Register<CommandMessage>(commandDispatcher);
 			_dispatcher.Register<EditorDirtyFilesListMessage>(dirtyFilesHandler);
 			_dispatcher.Register<EditorCaretMessage>(getCaretHandler);
+			_dispatcher.Register<EditorWindowListMessage>(getWindowsHandler);
 
 			var editorDispatcher = new EditorDispatcher(new PluginLoader(_endpoint), _dispatcher, null);
 			_dispatcher.Register<EditorLoadMessage>(editorDispatcher);
@@ -60,6 +63,7 @@ namespace EditorEngine.Core.Bootstrapping
 			_dispatcher.Register<EditorRequestUserSelection>(editorDispatcher);
 			_dispatcher.Register<EditorRequestUserSelectionAtCaret>(editorDispatcher);
 			_dispatcher.Register<EditorRequestUserInput>(editorDispatcher);
+			_dispatcher.Register<EditorGetWindowsMessage>(editorDispatcher);
 		}
 
 		public void Register<T>(IConsumerOf<T> consumer) where T : Message

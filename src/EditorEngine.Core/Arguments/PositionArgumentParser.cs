@@ -9,6 +9,7 @@ namespace EditorEngine.Core.Arguments
 		public string File { get; set; }
 		public int Line { get; set; }
 		public int Column { get; set; }
+		public string Window { get; set; }
 
 		public void Add(Position position)
 		{
@@ -46,6 +47,10 @@ namespace EditorEngine.Core.Arguments
 			if (!int.TryParse(chunks[2], out column))
 				return goTo;
 			goTo.Column = column;
+			if (chunks.Length == 3)
+				return goTo;
+			
+			goTo.Window = chunks[3];
 			return goTo;
 		}
 	}

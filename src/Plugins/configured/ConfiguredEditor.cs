@@ -77,6 +77,11 @@ namespace configured
 
         public void GoTo(Location location)
         {
+            GoTo(location, null);
+        }
+
+        public void GoTo(Location location, string window)
+        {
             if (_goToCommand == null)
                 return;
             runCommand(
@@ -149,6 +154,13 @@ namespace configured
         public void RequestUserInput(string identifier, string defaultValue)
         {
             Publisher.Run("user-select unsupported \"" + identifier + "\" \"" + defaultValue + "\"");   
+        }
+
+        public string[] GetWindows()
+        {
+            return new[] {
+                "Window 1|Window 1"
+            };
         }
 
         private void tryOpenConfiguration()
