@@ -57,6 +57,7 @@ namespace sublime
                 _launchCommand.Executable,
                 _launchCommand.Parameter,
                 true);
+            loadProject(projectFromArgs(ArgumentParser.Parse(args).ToArray()));
             Logger.Write("sublime started");
             _startupGraceTime = DateTime.Now.AddSeconds(5);
 		}
@@ -140,6 +141,9 @@ namespace sublime
 
 		public void RunCommand(string[] args)
         {
+            if (args.Length == 2 && args[0] == "load-project") {
+                loadProject(args[1]);
+            }
         }
 
         public Caret GetCaret()
@@ -258,15 +262,20 @@ namespace sublime
                 _port = int.Parse(node.InnerText);
         }
 
+        private string projectFromArgs(KeyValuePair<string,string>[] arguments) {
+            var sublimeProject = arguments
+                .Where(p => p.Key == "--editor.sublime.project")
+                .Select(p => p.Value)
+                .FirstOrDefault();
+            return sublimeProject;
+        }
+
 		private void appendArguments(string[] arguments) {
             Logger.Write("Sublime arguments:");
             foreach (var argument in arguments)
                 Logger.Write("\t" + argument);
 			var args = ArgumentParser.Parse(arguments);
-			var sublimeProject = args
-				.Where(p => p.Key == "--editor.sublime.project")
-	            .Select(p => p.Value)
-	            .FirstOrDefault();
+			var sublimeProject = projectFromArgs(args.ToArray());
 			if (sublimeProject != null) {
 				if (Environment.OSVersion.Platform != PlatformID.MacOSX && Environment.OSVersion.Platform != PlatformID.Unix)
 					sublimeProject = sublimeProject.Replace("/", "\\");
@@ -320,6 +329,15 @@ namespace sublime
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
             return process;
+        }
+
+        private Process loadProject(string project) {
+            if (project == null)
+                return null;
+            return runCommand(
+                _launchCommand.Executable,
+                " --add \"" + project + "\"",
+                true);
         }
 	}
 
