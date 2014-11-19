@@ -1,14 +1,16 @@
 using System;
-using System.Net.Sockets;
 using System.Collections;
-using System.Text;
 using System.IO;
-using System.Threading;
 using System.Linq;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+
 namespace EditorClient
 {
-	public class Client
+	public class Client : IDisposable
 	{
+        private TcpClient _client;
         private NetworkStream _stream;
         readonly byte[] _buffer = new byte[1000000];
         private int _currentPort;
@@ -37,10 +39,10 @@ namespace EditorClient
             if (retryCount >= 5)
                 return;
 			try {
-	            var client = new TcpClient();
-	            client.Connect("127.0.0.1", port);
+	            _client = new TcpClient();
+	            _client.Connect("127.0.0.1", port);
 	            _currentPort = port;
-	            _stream = client.GetStream();
+	            _stream = _client.GetStream();
 	            _stream.BeginRead(_buffer, 0, _buffer.Length, ReadCompleted, _stream);
 				IsConnected = true;
 			} 
@@ -52,13 +54,22 @@ namespace EditorClient
 
         public void Disconnect()
         {
-			try {
-				IsConnected = false;
-	            _stream.Close();
-	            _stream.Dispose();
-			}
-			catch
-			{}
+            while (IsSending)
+                Thread.Sleep(10);
+			IsConnected = false;
+            if (_stream != null) {
+                try {_stream.Close(); }
+                catch (Exception ex) { }
+            }
+            if (_client != null) {
+                try { _client.Close(); }
+                catch (Exception ex) { }
+            }
+        }
+
+        public void Dispose()
+        {
+            Disconnect();
         }
 
         private void Reconnect(int retryCount)

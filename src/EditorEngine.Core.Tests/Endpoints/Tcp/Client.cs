@@ -7,8 +7,9 @@ using System.Threading;
 using System.Linq;
 namespace EditorEngine.Core.Tests.Endpoints.Tcp
 {
-	class Client
+	class Client : IDisposable
 	{
+        private TcpClient _client;
         private NetworkStream _stream;
         readonly byte[] _buffer = new byte[1000000];
         private int _currentPort;
@@ -38,10 +39,10 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
             if (retryCount >= 5)
                 return;
 			try {
-	            var client = new TcpClient();
-	            client.Connect("127.0.0.1", port);
+	            _client = new TcpClient();
+	            _client.Connect("127.0.0.1", port);
 	            _currentPort = port;
-	            _stream = client.GetStream();
+	            _stream = _client.GetStream();
 	            _stream.BeginRead(_buffer, 0, _buffer.Length, ReadCompleted, _stream);
 			} 
 			catch 
@@ -52,14 +53,23 @@ namespace EditorEngine.Core.Tests.Endpoints.Tcp
 
         public void Disconnect()
         {
-			try {
-	            _stream.Close();
-	            _stream.Dispose();
-			}
-			catch
-			{}
+            while (IsSending)
+                Thread.Sleep(10);
+            if (_stream != null) {
+                try {_stream.Close(); }
+                catch (Exception ex) { Logger.Write(ex); }
+            }
+            if (_client != null) {
+                try { _client.Close(); }
+                catch (Exception ex) { Logger.Write(ex); }
+            }
         }
 
+        public void Dispose()
+        {
+            Disconnect();
+        }
+			
         private void Reconnect(int retryCount)
         {
             retryCount++;
