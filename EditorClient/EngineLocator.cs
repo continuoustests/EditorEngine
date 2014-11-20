@@ -11,18 +11,24 @@ namespace EditorClient
 		public Instance GetInstance(string path)
 		{
 			var instances = getInstances(path);
-			return instances.Where(x => isInstance(path, x.Key) && canConnectTo(x))
+			return instances.Where(x => isInstance(x.Key, path) && canConnectTo(x))
 				.OrderByDescending(x => x.Key.Length)
 				.FirstOrDefault();
 		}
 
-		private bool isInstance(string path, string key)
+		private bool isInstance(string key, string path)
 		{
+            var osPath = "";
+            var osKey = "";
 			if (Environment.OSVersion.Platform == PlatformID.Unix ||
-				Environment.OSVersion.Platform == PlatformID.MacOSX)
-				return path.StartsWith(key);
-			else
-				return path.ToLower().StartsWith(key.ToLower());
+				Environment.OSVersion.Platform == PlatformID.MacOSX) {
+                osKey = key;
+                osPath = path;
+			} else {
+                osKey = key.ToLower();
+                osPath = path.ToLower();
+            }
+            return osKey == osPath || osPath.StartsWith(osKey+Path.DirectorySeparatorChar.ToString());
 		}
 		
 		private IEnumerable<Instance> getInstances(string path)

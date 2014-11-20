@@ -5,6 +5,7 @@ using EditorEngine.Core.Messaging;
 using EditorEngine.Core.Messaging.Messages;
 using EditorEngine.Core.Logging;
 using System.Text;
+using System.Threading;
 using System.IO;
 using System.Diagnostics;
 namespace EditorEngine.Core.Endpoints
@@ -52,6 +53,8 @@ namespace EditorEngine.Core.Endpoints
 		public void Stop()
 		{
 			_server.Send("shutdown");
+            Thread.Sleep(100);
+            _server.Dispose();
 			if (File.Exists(_instanceFile))
 				File.Delete(_instanceFile);
 		}
