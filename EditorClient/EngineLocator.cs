@@ -33,16 +33,14 @@ namespace EditorClient
 		
 		private IEnumerable<Instance> getInstances(string path)
 		{
-			var dir = Path.Combine(FS.GetTempDir(), "EditorEngine");
-			if (Directory.Exists(dir))
-			{
-				foreach (var file in Directory.GetFiles(Path.Combine(FS.GetTempDir(), "EditorEngine"), "*.pid"))
-				{
-					var instance = Instance.Get(file, File.ReadAllLines(file));
-					if (instance != null)
-						yield return instance;
-				}
-			}
+            var user = System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace(Path.DirectorySeparatorChar.ToString(), "-");
+            var filepattern = string.Format("*.EditorEngine.{0}.pid", user);
+            foreach (var file in Directory.GetFiles(FS.GetTempDir(), filepattern))
+            {
+                var instance = Instance.Get(file, File.ReadAllLines(file));
+                if (instance != null)
+                    yield return instance;
+            }
 		}
 		
 		private bool canConnectTo(Instance info)
