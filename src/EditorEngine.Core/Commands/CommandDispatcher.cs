@@ -18,6 +18,7 @@ namespace EditorEngine.Core.Commands
 		{
 			lock (_handlers)
 			{
+                Logger.Write("Locating handler for " + message.Command);
 				var handler = _handlers.FirstOrDefault(x => x.ID.Equals(message.Command));
 				if (handler == null)
 					return;

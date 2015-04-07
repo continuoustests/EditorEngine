@@ -33,4 +33,4 @@ options=""
 if [ "$4" == "editor" ]; then
 	options=$(oi conf read editor.*|grep executable|sed s/editor./--editor./g)
 fi
-mono --debug ReleaseBinaries/EditorClient.exe src/EditorEngine/bin/AutoTest.Net "${@:4}" $options
+mono --debug ReleaseBinaries/EditorClient.exe $1/src/EditorEngine/bin/AutoTest.Net "${@:4}" $options

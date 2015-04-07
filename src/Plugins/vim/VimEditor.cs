@@ -351,6 +351,7 @@ namespace vim
 			var textModified =
 				message.Text
 					.Replace("\\", "\\\\")
+					.Replace("\"", "\\\"")
 					.Replace(Environment.NewLine, newline) +
 				line.Substring(insertColumn, removeLength);
 			//send("{0}:remove/0 {1} {2}",
