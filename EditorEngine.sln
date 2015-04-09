@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorEngine", "src\EditorE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorClient", "EditorClient\EditorClient.csproj", "{2CFDE195-E290-44FC-91DA-D4E29954B696}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "emacs", "src\Plugins\emacs\emacs.csproj", "{D09EB3B0-DECB-11E4-BF1A-C8F7334ECEBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,11 @@ Global
 		{FB9BD7EA-F1F8-4F9C-8B82-17E703C0C777}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB9BD7EA-F1F8-4F9C-8B82-17E703C0C777}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB9BD7EA-F1F8-4F9C-8B82-17E703C0C777}.Release|Any CPU.Build.0 = Release|Any CPU
+ 
+        {D09EB3B0-DECB-11E4-BF1A-C8F7334ECEBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D09EB3B0-DECB-11E4-BF1A-C8F7334ECEBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D09EB3B0-DECB-11E4-BF1A-C8F7334ECEBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D09EB3B0-DECB-11E4-BF1A-C8F7334ECEBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{688CCD89-39F6-4519-8E21-AF6B23EAB3C9} = {0F8983C9-AAEA-4822-9F73-3C8FC3248534}

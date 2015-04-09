@@ -33,13 +33,14 @@ cp -r $SOURCEDIR/Plugins/vim/vim.executable $DEPLOYDIR/plugins
 cp -r $SOURCEDIR/Plugins/vim/vim.parameters $DEPLOYDIR/plugins
 cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins
 cp -r $SOURCEDIR/Plugins/configured/configured.editor $DEPLOYDIR/plugins
-cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins/emacs.dll
-cp -r $SOURCEDIR/Plugins/configured/Configurations/emacs.editor $DEPLOYDIR/plugins
+cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins/emacsconfigured.dll
+cp -r $SOURCEDIR/Plugins/configured/Configurations/emacs.editor $DEPLOYDIR/plugins/emacsconfigured.editor
 cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins/notepad++.dll
 cp -r $SOURCEDIR/Plugins/configured/Configurations/notepad++.editor $DEPLOYDIR/plugins
 cp -r $BINARYDIR/configured.dll $DEPLOYDIR/plugins/ultraedit.dll
 cp -r $SOURCEDIR/Plugins/configured/Configurations/ultraedit.editor $DEPLOYDIR/plugins
 cp -r $BINARYDIR/sublime.dll $DEPLOYDIR/plugins
 cp -r $SOURCEDIR/Plugins/sublime/sublime.editor $DEPLOYDIR/plugins
+cp -r $BINARYDIR/emacs.dll $DEPLOYDIR/plugins
 cp -r $BINARYDIR/test.dll $DEPLOYDIR/plugins
 cp $SOURCEDIR/editor.oicfgoptions $DEPLOYDIR/

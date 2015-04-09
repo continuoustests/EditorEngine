@@ -28,13 +28,14 @@ xcopy %SRC%\Plugins\vim\vim.executable %DEPLOYDIR%\plugins\
 xcopy %SRC%\Plugins\vim\vim.parameters %DEPLOYDIR%\plugins\
 xcopy %BINARYDIR%\configured.dll %DEPLOYDIR%\plugins\
 xcopy %SRC%\Plugins\configured\configured.editor %DEPLOYDIR%\plugins\
-echo f|xcopy %BINARYDIR%\configured.dll %DEPLOYDIR%\plugins\emacs.dll /y
-xcopy %SRC%\Plugins\configured\Configurations\emacs.editor %DEPLOYDIR%\plugins\
+echo f|xcopy %BINARYDIR%\configured.dll %DEPLOYDIR%\plugins\emacsconfigured.dll /y
+xcopy %SRC%\Plugins\configured\Configurations\emacs.editor %DEPLOYDIR%\plugins\emacsconfigured.editor
 echo f|xcopy %BINARYDIR%\configured.dll %DEPLOYDIR%\plugins\notepad++.dll /y
 xcopy %SRC%\Plugins\configured\Configurations\notepad++.editor %DEPLOYDIR%\plugins\
 echo f|xcopy %BINARYDIR%\configured.dll %DEPLOYDIR%\plugins\ultraedit.dll /y
 xcopy %SRC%\Plugins\configured\Configurations\ultraedit.editor %DEPLOYDIR%\plugins\
 xcopy %BINARYDIR%\sublime.dll %DEPLOYDIR%\plugins\
 xcopy %SRC%\Plugins\Sublime\sublime.editor %DEPLOYDIR%\plugins\
+xcopy %BINARYDIR%\emacs.dll %DEPLOYDIR%\plugins\
 xcopy %BINARYDIR%\test.dll %DEPLOYDIR%\plugins\
 xcopy %SRC%\editor.oicfgoptions %DEPLOYDIR%\
