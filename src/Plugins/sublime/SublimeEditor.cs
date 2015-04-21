@@ -23,7 +23,6 @@ namespace sublime
 	{
 		private Command _launchCommand = null;
 		private int _port = 9998;
-		private bool _initialized = false;
         private DateTime _startupGraceTime = DateTime.MinValue;
 		public ICommandEndpoint Publisher { private get; set; }
 		
